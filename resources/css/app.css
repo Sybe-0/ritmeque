@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@source "../views/welcome.blade.php";
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -8,4 +9,14 @@
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+bg-custom-sign {
+    bakground: url( {{asset('assets/img/dekstop_background.png')}} ) no-repeat center cover;
 }
