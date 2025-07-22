@@ -1,5 +1,6 @@
-@import 'tailwindcss';
-@source "../views/welcome.blade.php";
+@import "tailwindcss";
+
+@config "../../tailwind.config.js";
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -7,16 +8,38 @@
 @source '../**/*.js';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans: "Instrument Sans", ui-sans-serif, system-ui, sans-serif,
+        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+        "Noto Color Emoji";
+    --color-dark-blue: #1e223a;
+    --color-med-pink: #a32656;
+    --bg-dekstop-uns: url(/public/assets/img/dekstop_background.png);
 }
 
-* {
+body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    border: none;
+    color: white;
 }
 
-bg-custom-sign {
-    bakground: url( {{asset('assets/img/dekstop_background.png')}} ) no-repeat center cover;
+.bg-main {
+    background-image: theme(--bg-dekstop-uns);
+}
+.bg-custom-darkblue {
+    background-color: theme(--color-dark-blue);
+}
+.bg-custom-pink {
+    background-color: theme(--color-med-pink);
+}
+.text-custom-pink {
+    color: theme(--color-med-pink);
+}
+.media-main-input {
+    @apply w-full focus:bg-[#1B1E33] focus:outline-none focus:text-[#a3a3a3] text-2xl p-1.5 border-b-4 border-(--color-med-pink) rounded-[10px];
+}
+
+.btn-social-media {
+    @apply h-11 border-[theme(--color-med-pink)] border-1 text-2xl flex justify-center rounded-[10px];
 }
