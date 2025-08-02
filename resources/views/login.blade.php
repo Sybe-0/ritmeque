@@ -20,11 +20,12 @@
             <img src="{{ asset('assets/img/logo_ritmeque_white.png') }}" class="w-72 self-center mb-2.5 mt-10">
             <h2 class="-mt-8 text-center text-4xl font-semibold cursor-default">Sign In</h2>
             <p class="text-center text-2xl mb-10 cursor-default">Enter Your account and Welcome back!</p>
-            <form action="" class="flex flex-col items-center">
-                <input type="text" placeholder="Username"
-                    class="media-main-input mb-2.5">
-                <input type="password" placeholder="Password"
-                    class="media-main-input">
+
+            <form action="/signin" method="post" class="flex flex-col items-center">
+                <input type="text" name="name" placeholder="Username"
+                    class="media-main-input mb-2.5" required>
+                <input type="password" name="password" placeholder="Password"
+                    class="media-main-input" required>
                 <div class="mt-2 mb-3 w-full flex justify-between">
                     <div class="mx-4 flex items-center">
                         <input type="checkbox" name="checklist"
@@ -38,6 +39,7 @@
                         class="ml-1 hover:text-pink-700 hover:text-lg cursor-pointer text-pink-800"><a href="/signup">Sign Up</a></span>
                 </p>
             </form>
+
             <div class="w-full mt-10 flex flex-col self-end">
                 <p class="text-xl mb-2.5 self-center cursor-default">Or just one click</p>
                 <button

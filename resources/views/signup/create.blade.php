@@ -20,13 +20,12 @@
             <img src="{{ asset('assets/img/logo_ritmeque_white.png') }}" class="w-72 self-center mb-2.5 mt-8">
             <h2 class="-mt-8 text-center text-4xl font-semibold cursor-default">Sign Up</h2>
             <p class="text-center text-2xl mb-10 cursor-default">Register Your account and Welcome!</p>
-            <form action="" method="POST" class="flex flex-col items-center">
-                <input type="text" placeholder="Username"
-                    class="media-main-input mb-2.5">
-                <input type="text" placeholder="Email"
-                    class="media-main-input mb-2.5">
-                <input type="password" placeholder="Password"
-                    class="media-main-input">
+
+            <form action="/signup" method="post" class="flex flex-col items-center">
+                @csrf
+                <input type="text" name="name" placeholder="Username" class="media-main-input mb-2.5" required>
+                <input type="text" name="email" placeholder="Email" class="media-main-input mb-2.5" required>
+                <input type="password" name="password" placeholder="Password" class="media-main-input" required>
                 <div class="mt-2 mb-3 w-full flex justify-between">
                     <div class="mx-4 flex items-center">
                         <input type="checkbox" name="checklist"
@@ -35,16 +34,27 @@
                     </div>
                     <p class="mx-4 text-custom-pink text-xl cursor-auto"><a href="">Forgot password?</a></p>
                 </div>
-                <button type="submit" class="w-full bg-custom-pink text-2xl font-semibold h-11 rounded-[10px]">Submit</button>
+                <button type="submit"
+                    class="w-full bg-custom-pink text-2xl font-semibold h-11 rounded-[10px]">Submit</button>
                 <p class="text-xl my-2.5 cursor-default">Already have any account? <span
-                        class="ml-1 hover:text-pink-700 hover:text-lg cursor-pointer text-pink-800"><a href="/signin">Sign In</a></span>
+                        class="ml-1 hover:text-pink-700 hover:text-lg cursor-pointer text-pink-800"><a
+                            href="/signin">Sign In</a></span>
                 </p>
             </form>
 
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <div class="w-full mt-5 flex flex-col self-end">
                 <p class="text-xl mb-2.5 self-center cursor-default">Or just one click</p>
-                <button
-                    class="btn-social-media mb-3">
+                <button class="btn-social-media mb-3">
                     <img src="{{ asset('assets/img/google_icon.svg') }}" class="w-6 ">
                     <p class="text-custom-pink self-center ml-2 font-medium">Google</p>
                 </button>
