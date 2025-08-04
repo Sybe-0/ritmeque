@@ -16,7 +16,7 @@ class RegisterController extends Controller
     {
 
         $validateUser = $request->validate([
-            'name' => 'required|string|min:3|max:255|unique:users,email',
+            'username' => 'required|string|min:3|max:255|unique:users,email',
             'email' => 'required|string|email|max:255|unique:users,email',
             'password' => 'required|string|min:5|max:25'
         ]);
@@ -24,9 +24,8 @@ class RegisterController extends Controller
         //enkripsi password
         $validateUser['password'] = Hash::make($validateUser['password']);
 
-        dd('berhasil');
-        
         User::create($validateUser);
 
+        return redirect('/signin')->with('success', 'Registrasi Berhasil! Coba login untuk memastikan akun.');
     }
 }

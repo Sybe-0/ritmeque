@@ -2,9 +2,10 @@
 
 use App\Models\Post;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\LoginController;
-use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\LobbyController;
+use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\LoginController;
+
 
 Route::get('/signup', [RegisterController::class, 'create']);
 Route::post('/signup', [RegisterController::class, 'store']);

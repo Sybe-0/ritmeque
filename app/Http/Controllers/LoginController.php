@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Fascades\Auth;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -12,17 +12,20 @@ class LoginController extends Controller
         return view('login');
     }
 
-    public function authenticate(Request $request){
-        $authen = $request->validate([
-            'name' => 'required|name',
+    public function authenticate(Request $request)
+    {
+        $credentials = $request->validate([
+            'email' => 'required|email',
             'password' => 'required'
         ]);
 
-        if(Auth::attempt([$authen])) {
+        if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
             return redirect()->intended('/home');
         }
 
-        dd('done');
+        return redirect()->back()->withErrors([
+            'email' => 'Email atau password salah!'
+        ]);
     }
 }
