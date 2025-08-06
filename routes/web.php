@@ -14,3 +14,7 @@ Route::get('/signin', [LoginController::class, 'index']);
 Route::post('/signin', [LoginController::class, 'authenticate']);
 
 Route::get('/home', [LobbyController::class, 'index']);
+
+// routes/web.php
+
+Route::redirect('/', '/home', 301);
