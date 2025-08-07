@@ -12,6 +12,15 @@
 <body>
     <main class="flex bg-main bg-cover text-xl">
         <section class="basis-2/4 mb-8 ml-8 flex flex-col justify-end">
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach 
+                    </ul>
+                </div>
+            @endif
             <h2 class="font-bold text-4xl">Build Your playlist from any</h2>
             <p class="font-light text-3xl">Sources.</p>
         </section>
@@ -25,14 +34,13 @@
                 @csrf
                 <input type="text" name="username" placeholder="Username" class="media-main-input mb-2.5" required>
                 <input type="text" name="email" placeholder="Email" class="media-main-input mb-2.5" required>
-                <input type="password" name="password" placeholder="Password" class="media-main-input" required>
+                <input type="password" name="password" placeholder="Password" class="media-main-input password" required>
                 <div class="mt-2 mb-3 w-full flex justify-between">
                     <div class="mx-4 flex items-center">
-                        <input type="checkbox" name="checklist"
+                        <input type="checkbox" name="checklist" onclick="showHide()"
                             class="appearance-none bg-pink-700 w-4 h-4 rounded-xs mr-2.5 checked:appearance-auto mt-1 cursor-pointer">
-                        <p class="text-xl cursor-default">Remember me</p>
+                        <p class="text-xl cursor-default">Show password</p>
                     </div>
-                    <p class="mx-4 text-custom-pink text-xl cursor-auto"><a href="">Forgot password?</a></p>
                 </div>
                 <button type="submit"
                     class="w-full bg-custom-pink text-2xl font-semibold h-11 rounded-[10px]">Submit</button>
@@ -42,29 +50,34 @@
                 </p>
             </form>
 
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach 
-                    </ul>
-                </div>
-            @endif
-
             <div class="w-full mt-5 flex flex-col self-end">
                 <p class="text-xl mb-2.5 self-center cursor-default">Or just one click</p>
-                <button class="btn-social-media mb-3">
-                    <img src="{{ asset('assets/img/google_icon.svg') }}" class="w-6 ">
-                    <p class="text-custom-pink self-center ml-2 font-medium">Google</p>
-                </button>
-                <button class="btn-social-media">
-                    <img src="{{ asset('assets/img/facebook_icon.svg') }}" class="w-6 ">
-                    <p class="text-custom-pink self-center ml-2 font-medium">Facebook</p>
-                </button>
+                <a href="{{ url('auth/google') }}" class="btn-social-media mb-3">
+                    <button class="flex">
+                        <img src="{{ asset('assets/img/google_icon.svg') }}" class="w-6 ">
+                        <p class="text-custom-pink self-center ml-2 font-medium">Google</p>
+                    </button>
+                </a>
+                <a href=" {{ url('auth/facebook') }}" class="btn-social-media">
+                    <button class="flex">
+                        <img src="{{ asset('assets/img/facebook_icon.svg') }}" class="w-6 ">
+                        <p class="text-custom-pink self-center ml-2 font-medium">Facebook</p>
+                    </button>
+                </a>
             </div>
         </section>
     </main>
+
+    <script>
+        function showHide() {
+            let switchPass = document.querySelector('.password');
+            if (switchPass.type === "password") {
+                switchPass.type = "text";
+            } else {
+                switchPass.type = "password";
+            }
+        }
+    </script>
 </body>
 
 </html>

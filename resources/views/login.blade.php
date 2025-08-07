@@ -41,7 +41,9 @@
                             class="appearance-none bg-pink-700 w-4 h-4 rounded-xs mr-2.5 checked:appearance-auto mt-1 cursor-pointer">
                         <p class="text-xl cursor-default">Remember me</p>
                     </div>
-                    <p class="mx-4 text-custom-pink text-xl cursor-pointer">Forgot password?</p>
+                    <a href="{{ url('/password/reset') }}">
+                        <p class="mx-4 text-custom-pink text-xl cursor-pointer">Forgot password?</p>
+                    </a>
                 </div>
                 <button type="submit" class="w-full bg-custom-pink text-2xl font-semibold h-11 rounded-[10px]"
                     onclick="">Submit</button>
@@ -53,14 +55,18 @@
 
             <div class="w-full mt-10 flex flex-col self-end">
                 <p class="text-xl mb-2.5 self-center cursor-default">Or just one click</p>
-                <button class="btn-social-media mb-3">
-                    <img src="{{ asset('assets/img/google_icon.svg') }}" class="w-6 ">
-                    <p class="text-custom-pink self-center ml-2 font-medium">Google</p>
-                </button>
-                <button class="btn-social-media">
-                    <img src="{{ asset('assets/img/facebook_icon.svg') }}" class="w-6 ">
-                    <p class="text-custom-pink self-center ml-2 font-medium">Facebook</p>
-                </button>
+                <a href="{{ url('auth/google') }}" class="btn-social-media mb-3">
+                    <button class="flex">
+                        <img src="{{ asset('assets/img/google_icon.svg') }}" class="w-6 ">
+                        <p class="text-custom-pink self-center ml-2 font-medium">Google</p>
+                    </button>
+                </a>
+                <a href=" {{ url('auth/facebook') }}" class="btn-social-media">
+                    <button class="flex">
+                        <img src="{{ asset('assets/img/facebook_icon.svg') }}" class="w-6 ">
+                        <p class="text-custom-pink self-center ml-2 font-medium">Facebook</p>
+                    </button>
+                </a>
             </div>
         </section>
     </main>

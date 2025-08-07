@@ -21,4 +21,12 @@ class AppServiceProvider extends ServiceProvider
     {
         //
     }
+
+    protected function mapWebRoutes()
+    {
+       Route::middleware(['web', 'check.user']) // Menambahkan middleware di sini
+           ->namespace($this->namespace)
+           ->group(base_path('routes/web.php'));
+    }
+   
 }

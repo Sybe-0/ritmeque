@@ -1,0 +1,27 @@
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+
+class LoginToken 
+{
+    /**
+    * Handle an incoming request.
+    *
+    * @param  \Illuminate\Http\Request  $request
+    * @param  \Closure  $next
+    * @return mixed
+    */
+    public function handle(Request $request, Closure $next)
+    {
+        // Logika yang ingin diterapkan untuk semua pengguna
+        if (!auth()->check()) {
+            return redirect('/');
+        }
+
+        return $next($request);
+    }
+}
+   
