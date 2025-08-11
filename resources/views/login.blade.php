@@ -37,7 +37,7 @@
                 <input type="password" name="password" placeholder="Password" class="media-main-input" required>
                 <div class="mt-2 mb-3 w-full flex justify-between">
                     <div class="mx-4 flex items-center">
-                        <input type="checkbox" name="checklist"
+                        <input type="checkbox" name="remember"
                             class="appearance-none bg-pink-700 w-4 h-4 rounded-xs mr-2.5 checked:appearance-auto mt-1 cursor-pointer">
                         <p class="text-xl cursor-default">Remember me</p>
                     </div>
