@@ -49,20 +49,32 @@
                     <button type="submit" class="p-2 px-6 border-[1px] border-white rounded-[4px]">Logout</button>
                 </form>
             @else
-            <div class="flex items-center">
-                <a href="{{ url('/signup') }}" class="mr-6">
-                    <div class="p-2 px-6 bg-custom-pink rounded-[4px]">
-                        <h3 class="text-xl">Register</h3>
-                    </div>
-                </a>
-                <a href="{{ url('/signin') }}" class="mr-2">
-                    <div class="p-2 px-6 border-[1px] border-white rounded-[4px]">
-                        <h3 class="text-xl">Login</h3>
-                    </div>
-                </a>
-            </div>
+                <div class="flex items-center">
+                    <a href="{{ url('/signup') }}" class="mr-6">
+                        <div class="p-2 px-6 bg-custom-pink rounded-[4px]">
+                            <h3 class="text-xl">Register</h3>
+                        </div>
+                    </a>
+                    <a href="{{ url('/signin') }}" class="mr-2">
+                        <div class="p-2 px-6 border-[1px] border-white rounded-[4px]">
+                            <h3 class="text-xl">Login</h3>
+                        </div>
+                    </a>
+                </div>
             @endauth
         </div>
+        <div class="flex">
+            @foreach ($datalibrary as $library)
+                <div class="p-2 mx-2 bg-[#1e1e1e] w-32 h-40 flex flex-col" onclick="playList({{ $library->id }})">
+                    <div class="w-26 h-20 bg-white m-auto"></div>
+                    <div class="">{{ $library->platform }}</div>
+                    <div class="">{{ $library->title }}</div>
+                </div>
+            @endforeach
+        </div>
+
+        <div id="container-lib" class=""></div>
+
     </section>
     <section class="w-screen h-screen fixed justify-center items-center hidden" id="modalLibrary">
         <div class="bg-[#1e1e1e] p-4 border-[1px] rounded-[12px] w-4/12">
@@ -88,12 +100,14 @@
                     <p class="mr-2 text-nowrap">Description :</p>
                     <input type="text" name="description" class="border-[1px] w-full p-2 rounded-[8px]">
                 </div>
-                <button type="submit" onclick="submitModal()" class="bg-custom-pink p-2 w-full mt-4 rounded-[10px]">Add Library</button>
+                <button type="submit" onclick="submitModal()" class="bg-custom-pink p-2 w-full mt-4 rounded-[10px]">Add
+                    Library</button>
             </form>
         </div>
     </section>
 
     <script>
+        const libraryContainer = document.querySelector('#container-lib');
         const modalLibrary = document.querySelector('#modalLibrary');
         const inputLibrary = document.querySelector('#inputUrl');
 
@@ -103,6 +117,14 @@
             } else {
                 modalLibrary.style.display = "none";
             }
+        }
+
+        function playList(id) {
+            fetch('/library/find?id=' + id)
+                .then(response => response.json())
+                .then(data => {
+                    libraryContainer.textContent = data.title;
+            });
         }
 
         function closeModal() {

@@ -16,9 +16,11 @@ Route::get('/signin', [LoginController::class, 'index'])->middleware('guest');
 Route::post('/signin', [LoginController::class, 'authenticate']);
 
 Route::get('/home', [LobbyController::class, 'index']);
-Route::post('/home/library', [LobbyController::class, 'library']);
+Route::post('/home/library', [LobbyController::class, 'library'])->middleware('auth');
 Route::post('/home/logout', [LobbyController::class, 'logout'])->middleware('auth');
 Route::redirect('/', '/home', 301);
+
+Route::get('/library/find', [LobbyController::class, 'show']);
 
 Route::get('password/reset', [ResetController::class, 'index']);
 Route::post('password/email', [ResetController::class, 'sendResetLinkEmail'])->name('password.email');

@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('libraries', function (Blueprint $table) {
             $table->id();
             $table->string('title');
+            $table->foreignId('users_id');
             $table->string('platform');
             $table->string('description');
             $table->timestamps();
