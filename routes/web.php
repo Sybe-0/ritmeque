@@ -2,6 +2,7 @@
 
 use App\Models\Post;
 use App\Models\Library;
+use App\Models\Playlist;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LobbyController;
@@ -17,10 +18,12 @@ Route::post('/signin', [LoginController::class, 'authenticate']);
 
 Route::get('/home', [LobbyController::class, 'index']);
 Route::post('/home/library', [LobbyController::class, 'library'])->middleware('auth');
+Route::post('/home/playlist', [LobbyController::class, 'playlist'])->middleware('auth');
 Route::post('/home/logout', [LobbyController::class, 'logout'])->middleware('auth');
 Route::redirect('/', '/home', 301);
 
 Route::get('/library/find', [LobbyController::class, 'show']);
+Route::get('/library/test/{id}', [LobbyController::class, 'testGetId'])->name('test-library');
 
 Route::get('password/reset', [ResetController::class, 'index']);
 Route::post('password/email', [ResetController::class, 'sendResetLinkEmail'])->name('password.email');

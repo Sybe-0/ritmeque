@@ -9,7 +9,7 @@
     @vite('resources/css/app.css')
 </head>
 
-<body class="bg-custom-darkblue flex">
+<body class="bg-custom-darkblue flex box-border h-screen max-h-screen">
     <section class="bg-custom-pink basis-1/4 h-screen">
         <div class="flex items-center p-2 mt-1.5">
             <img src="{{ asset('assets/img/icon_not.svg') }}" class="mr-2">
@@ -40,43 +40,8 @@
         </div>
     </section>
 
-    <section class="basis-3/4">
-        <div class="flex justify-between items mt-4 mx-2">
-            <h1 class="text-2xl font-bold p-2">All Libraries</h1>
-            @auth
-                <form action="/home/logout" method="post">
-                    @csrf
-                    <button type="submit" class="p-2 px-6 border-[1px] border-white rounded-[4px]">Logout</button>
-                </form>
-            @else
-                <div class="flex items-center">
-                    <a href="{{ url('/signup') }}" class="mr-6">
-                        <div class="p-2 px-6 bg-custom-pink rounded-[4px]">
-                            <h3 class="text-xl">Register</h3>
-                        </div>
-                    </a>
-                    <a href="{{ url('/signin') }}" class="mr-2">
-                        <div class="p-2 px-6 border-[1px] border-white rounded-[4px]">
-                            <h3 class="text-xl">Login</h3>
-                        </div>
-                    </a>
-                </div>
-            @endauth
-        </div>
-        <div class="flex">
-            @foreach ($datalibrary as $library)
-                <div class="p-2 mx-2 bg-[#1e1e1e] w-32 h-40 flex flex-col" onclick="playList({{ $library->id }})">
-                    <div class="w-26 h-20 bg-white m-auto"></div>
-                    <div class="">{{ $library->platform }}</div>
-                    <div class="">{{ $library->title }}</div>
-                </div>
-            @endforeach
-        </div>
-
-        <div id="container-lib" class=""></div>
-
-    </section>
-    <section class="w-screen h-screen fixed justify-center items-center hidden" id="modalLibrary">
+    {{-- !library modal! --}}
+    <section class="w-screen h-screen fixed justify-center items-center hidden" id="library-modal">
         <div class="bg-[#1e1e1e] p-4 border-[1px] rounded-[12px] w-4/12">
             <div class="flex justify-between items-center">
                 <p class="text-2xl">Create Your Library :</p>
@@ -105,11 +70,86 @@
             </form>
         </div>
     </section>
+    {{-- !url modal! --}}
+    <section class="w-screen h-screen fixed justify-center items-center hidden" id="url-modal">
+        <div class="bg-[#1e1e1e] p-4 border-[1px] rounded-[12px] w-4/12">
+            <div class="flex justify-between items-center">
+                <p class="text-2xl">Insert URL :</p>
+                <button onclick="closeModal()" class="bg-red-400 border-[1px] px-2 rounded-[4px]">X</button>
+            </div>
+            <form action="/home/playlist" method="post" class="mt-4">
+                @csrf
+                <input type="hidden" name="libraries_id" value="">
+                <input name="url_link" type="text" class="p-2 w-full border-[1px] rounded-[4px]"
+                    placeholder="YouTube URL">
+                <button type="submit" onclick="submitModal()"
+                    class="bg-custom-pink p-2 w-full mt-4 rounded-[10px]">Enter</button>
+            </form>
+        </div>
+    </section>
+
+    <section class="basis-3/4">
+        <div class="flex justify-between items-center mt-4 mx-2">
+            <h1 class="text-2xl font-bold p-2">All Libraries</h1>
+            @auth
+                <form action="/home/logout" method="post">
+                    @csrf
+                    <button type="submit" class="p-2 px-6 border-[1px] border-white rounded-[4px]">Logout</button>
+                </form>
+            @else
+                <div class="flex items-center">
+                    <a href="{{ url('/signup') }}" class="mr-6">
+                        <div class="p-2 px-6 bg-custom-pink rounded-[4px]">
+                            <h3 class="text-xl">Register</h3>
+                        </div>
+                    </a>
+                    <a href="{{ url('/signin') }}" class="mr-2">
+                        <div class="p-2 px-6 border-[1px] border-white rounded-[4px]">
+                            <h3 class="text-xl">Login</h3>
+                        </div>
+                    </a>
+                </div>
+            @endauth
+        </div>
+        <div class="flex overflow-x-auto">
+            @foreach ($datalibrary as $library)
+                <div class="p-2 mx-2 bg-[#1e1e1e] w-32 h-40 flex flex-col" onclick="playList({{ $library->id }})">
+                    <div class="w-26 h-20 bg-white m-auto"></div>
+                    <div class="">{{ $library->platform }}</div>
+                    <div class="">{{ $library->title }}</div>
+                </div>
+            @endforeach
+        </div>
+
+        <div class="">
+            <button id="url-btn" onclick="showInput()"
+                class="hidden items-center p-2 rounded-[8px] text-xl w-full bg-pink-900">
+                <img src="{{ asset('assets/img/icon_plus_only.svg') }}" class="mr-2">New Playlist
+            </button>
+            <div class="" id="library-title"></div>
+            <div class="" id="library-description"></div>
+        </div>
+
+
+        {{-- <a target="blank" href="{{ route('test-library', '3') }}">Test</a> --}}
+    </section>
 
     <script>
-        const libraryContainer = document.querySelector('#container-lib');
-        const modalLibrary = document.querySelector('#modalLibrary');
-        const inputLibrary = document.querySelector('#inputUrl');
+        const modalLibrary = document.querySelector('#library-modal');
+        const modalUrl = document.querySelector('#url-modal');
+        const btnUrl = document.querySelector('#url-btn');
+        //area const for any on play desk.
+        const libraryTitle = document.querySelector('#library-title');
+        const libraryPlatform = document.querySelector('#library-platform');
+        const libraryDesc = document.querySelector('#library-description');
+
+        function showInput() {
+            if (modalUrl.style.display === "none") {
+                modalUrl.style.display = "flex";
+            } else {
+                modalUrl.style.display = "none";
+            }
+        }
 
         function popModal() {
             if (modalLibrary.style.display === "none") {
@@ -123,23 +163,20 @@
             fetch('/library/find?id=' + id)
                 .then(response => response.json())
                 .then(data => {
-                    libraryContainer.textContent = data.title;
-            });
+                    btnUrl.style.display = "flex";
+                    libraryTitle.textContent = data.platform;
+                    libraryDesc.textContent = data.description;
+                    document.querySelector('input[name="libraries_id"]').value = (id);
+                });
         }
 
         function closeModal() {
             modalLibrary.style.display = "none";
+            modalUrl.style.display = "none";
         }
 
         function submitModal() {
             closeModal();
-        }
-
-        function pasteText() {
-            navigator.clipboard.readText()
-                .then(text => {
-                    inputLibrary.value = text;
-                });
         }
     </script>
 </body>

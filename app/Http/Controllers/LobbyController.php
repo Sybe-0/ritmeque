@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Library;
 use App\Models\User;
+use App\Models\Library;
+use App\Models\Playlist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -33,6 +34,17 @@ class LobbyController extends Controller
         return redirect('/');
     }
 
+    public function playlist(Request $request)
+    {
+        $playlistAdd = $request->validate([
+            'url_link' => 'required|string',
+            'libraries_id' => 'required',
+        ]);
+        Playlist::create($playlistAdd);
+
+        return redirect('/home');
+    }
+
     public function library(Request $request)
     {
         $libraryAdd = $request->validate([
@@ -48,5 +60,9 @@ class LobbyController extends Controller
         Library::create($libraryAdd);
 
         return redirect('/home');
+    }
+
+    public function testGetId($id) {
+        dd($id);
     }
 }
