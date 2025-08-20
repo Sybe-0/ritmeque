@@ -18,7 +18,8 @@ Route::post('/signin', [LoginController::class, 'authenticate']);
 
 Route::get('/home', [LobbyController::class, 'index']);
 Route::post('/home/library', [LobbyController::class, 'library'])->middleware('auth');
-Route::post('/home/playlist', [LobbyController::class, 'playlist'])->middleware('auth');
+Route::post('/home/delete', [LobbyController::class, 'destroy'])->name('library.delete');
+Route::post('/home/playlist', [LobbyController::class, 'playlist']);
 Route::post('/home/logout', [LobbyController::class, 'logout'])->middleware('auth');
 Route::redirect('/', '/home', 301);
 

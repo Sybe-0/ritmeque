@@ -17,6 +17,7 @@ class PlaylistFactory extends Factory
     public function definition(): array
     {
         return [
+            'songs' => $this->fake()->songs(),
             'url_link' => $this->fake()->url(),
         ];
     }

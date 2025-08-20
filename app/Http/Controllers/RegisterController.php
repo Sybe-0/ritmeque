@@ -26,6 +26,6 @@ class RegisterController extends Controller
 
         User::create($validateUser);
 
-        return redirect('/signin')->with('success', 'Registrasi Berhasil! Coba login untuk memastikan akun.');
+        return redirect('/home')->with('success', 'Registrasi Berhasil! Coba login untuk memastikan akun.');
     }
 }

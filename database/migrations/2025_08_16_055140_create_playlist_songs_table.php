@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('playlist_songs', function (Blueprint $table) {
             $table->id();
+            $table->string('songs');
             $table->foreignId('libraries_id');
             $table->string('url_link');
             $table->timestamps();

@@ -13,6 +13,7 @@ class Playlist extends Model
     protected $table = 'playlist_songs';
 
     protected $fillable = [
+        'songs',
         'libraries_id',
         'url_link',
     ];
