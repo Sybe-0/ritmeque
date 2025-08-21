@@ -27,7 +27,8 @@ class LoginController extends Controller
         }
 
         return redirect()->back()->withErrors([
-            'email' => 'Email atau password salah!'
+            'email' => 'Email salah!',
+            'password' => 'Password salah!'
         ]);
     }
 }

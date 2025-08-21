@@ -17,6 +17,12 @@ class LobbyController extends Controller
         return view('redirect.lobby', compact('datalibrary'));
     }
 
+    public function see(Request $request)
+    {
+        $dataplaylist = Playlist::where('libraries_id', $request->id)->get();
+        return response()->json($dataplaylist);
+    }
+
     public function show(Request $request)
     {
         $datalibrary = Library::findOrFail($request->id);
@@ -31,7 +37,7 @@ class LobbyController extends Controller
 
         request()->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect('/home');
     }
 
     public function library(Request $request)
@@ -51,6 +57,17 @@ class LobbyController extends Controller
         return redirect('/home');
     }
 
+    public function playlist(Request $request)
+    {
+        $playlistAdd = $request->validate([
+            'songs' => 'required|string',
+            'url_link' => 'required|string|url',
+            'libraries_id' => 'required',
+        ]);
+        Playlist::create($playlistAdd);
+        return redirect('/home');
+    }
+    
     public function destroy(Request $request)
     {
         $datalibrary = $request->validate([
@@ -60,19 +77,6 @@ class LobbyController extends Controller
         $library->delete();
         return redirect('/home');
     }
-
-    public function playlist(Request $request)
-    {
-        $playlistAdd = $request->validate([
-            'songs' => 'required|string',
-            'url_link' => 'required|string|url',
-            'libraries_id' => 'required',
-        ]);
-        Playlist::create($playlistAdd);
-
-        return redirect('/home');
-    }
-
 
     // public function testGetId($id) {
     //     dd($id);

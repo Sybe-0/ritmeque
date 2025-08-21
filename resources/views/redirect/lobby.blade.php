@@ -96,20 +96,19 @@
                 @csrf
                 <div class="text-2xl text-center cursor-pointer">Delete Libraries?</div>
                 <div class="flex justify-between mt-2 px-8">
-                    <input type="hidden" name="libraries_id">   
+                    <input type="hidden" name="libraries_id">
                     <button type="submit" class="text-xl px-4 py-2 cursor-pointer" id="last-delete">Yes</button>
                     <p class="text-xl px-4 py-2 cursor-pointer" onclick="closeModal()">Cancel</p>
                 </div>
             </form>
         </div>
     </section>
-
     {{-- main playlist --}}
     <section class="basis-3/4">
         <div class="flex justify-between items-center mt-4 mx-2">
             <h1 class="text-2xl font-bold p-2">All Libraries</h1>
             @auth
-                <form action="/home/logout" method="post">
+                <form action="/logout" method="post">
                     @csrf
                     <button type="submit" class="p-2 px-6 border-[1px] border-white rounded-[4px]">Logout</button>
                 </form>
@@ -143,18 +142,16 @@
         <div class="mt-4 flex">
             <div class="basis-3/4 px-4">
                 <h2 class="text-2xl">Playlist</h2>
-                <div></div>
+                {{--  --}}
+                <div class="" id="test"></div>
             </div>
             <div class="basis-1/4 min-h-80 h-full border-[1px] px-6" id="show-border">
-                <div class="bg-[#1e1e1e] w-full h-32 hidden" id="library-img">
-                    <img src="">
-                </div>
                 <div class="text-2xl" id="library-title"></div>
-                <div class="" id="library_description"></div>
+                <div class="" id="library-description"></div>
                 <div class="hidden items-center" id="url-btn">
                     <img src="{{ asset('assets/img/icon_plus_add.svg') }}" class="w-12" onclick="showInput()">
                     <img src="{{ asset('assets/img/icon_trash.svg') }}" class="ml-2 w-10"
-                        onclick="showDelete({{ $library->id }})">
+                        onclick="showDelete()">
                     <img src="{{ asset('assets/img/icon_play.svg') }}" class="ml-2 w-10">
                     <img src="{{ asset('assets/img/icon_edit.svg') }}" class="ml-2 w-10" onclick="popModal()">
                 </div>
@@ -169,9 +166,9 @@
         const btnUrl = document.querySelector('#url-btn');
         const modalDel = document.querySelector('#delete-modal');
         //area const for any on play desk.
-        const libraryImg = document.querySelector('#library-img');
         const libraryTitle = document.querySelector('#library-title');
         const libraryDesc = document.querySelector('#library-description');
+        const playlistTest = document.querySelector('#test');
 
         let deleteId;
 
@@ -182,24 +179,6 @@
                 modalDel.style.display = "none";
             }
         }
-        // document.querySelector('').addEventListener('click', function() {
-        //     fetch(`/home/delete/${deleteId}`, {
-        //             headers: {
-        //                 'X-CSRF-TOKEN': '{{ csrf_token() }}',
-        //                 'Content-Type': 'application/json'
-        //             }
-        //         })
-        //         .then(response => response.json())
-        //         .then(data => {
-        //             if (data.success) {
-        //                 // Tindakan setelah berhasil menghapus, misalnya refresh halaman atau menghapus elemen dari DOM
-        //                 location.reload(); // Refresh halaman
-        //             } else {
-        //                 alert(data.error); // Tampilkan pesan error
-        //             }
-        //         })
-        //         .catch(error => console.error('Error:', error));
-        // });
 
         function showInput() {
             if (modalUrl.style.display === "none") {
@@ -219,15 +198,23 @@
 
         function playList(id) {
             console.log(id);
-            
+
             fetch('/library/find?id=' + id)
                 .then(response => response.json())
                 .then(data => {
                     btnUrl.style.display = "flex";
-                    libraryImg.style.dislay = "block";
                     libraryTitle.textContent = data.title;
+                    libraryDesc.textContent = data.description;
                     document.querySelector('input[name="libraries_id"]').value = (id);
                     document.querySelector('#delete-modal input[name="libraries_id"]').value = (id);
+                });
+            
+            fetch('/library/playlist/find?id=' + id)
+                .then(response => response.json())
+                .then(list => {
+                    list.forEach(play => {
+                        playlistTest.innerHTML = play.songs;
+                    });
                 });
         }
 
