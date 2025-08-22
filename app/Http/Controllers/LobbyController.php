@@ -57,6 +57,20 @@ class LobbyController extends Controller
         return redirect('/home');
     }
 
+    public function update(Request $request)
+    {
+        $request->validate([
+            'title' => 'required',
+            'description' => 'required',
+            'libraries_id' => 'required',
+        ]);
+        $editId = Library::find($request->libraries_id);
+        $editId->title = $request->title;
+        $editId->description = $request->description;
+        $editId->save();
+        return redirect('/');
+    }
+
     public function playlist(Request $request)
     {
         $playlistAdd = $request->validate([
@@ -68,14 +82,24 @@ class LobbyController extends Controller
         return redirect('/home');
     }
     
-    public function destroy(Request $request)
+    public function destroyLibrary(Request $request)
     {
-        $datalibrary = $request->validate([
+        $deletelibrary = $request->validate([
             'libraries_id' => 'required',
         ]);
         $library = Library::find($request->libraries_id);
         $library->delete();
         return redirect('/home');
+    }
+
+    public function destroyPlaylist(Request $request)
+    {
+        $request->validate([
+            'playlist_id' => 'required',
+        ]);
+        $playlist = Playlist::find($request->playlist_id);
+        $playlist->delete();
+        return redirect('/');
     }
 
     // public function testGetId($id) {

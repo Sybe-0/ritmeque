@@ -40,7 +40,7 @@
         </div>
     </section>
 
-    {{-- !library modal! --}}
+    {{-- !modal add library! --}}
     <section class="w-screen h-screen fixed justify-center items-center hidden" id="library-modal">
         <div class="bg-[#1e1e1e] p-4 border-[1px] rounded-[12px] w-4/12">
             <div class="flex justify-between items-center">
@@ -70,6 +70,29 @@
             </form>
         </div>
     </section>
+    {{-- !modal edit library! --}}
+    <section class="w-screen h-screen fixed justify-center items-center hidden" id="library-edit-modal">
+        <div class="bg-[#1e1e1e] p-4 border-[1px] rounded-[12px] w-4/12">
+            <div class="flex justify-between items-center">
+                <p class="text-2xl">Edit Your Library :</p>
+                <button onclick="closeModal()" class="bg-red-400 border-[1px] px-2 rounded-[4px]">X</button>
+            </div>
+            <form action="/home/edit/library" method="post" class="mt-4">
+                @csrf
+                <input type="hidden" name="libraries_id">
+                <div class="flex items-center">
+                    <p class="mr-2 text-nowrap">Library's Name :</p>
+                    <input type="text" name="title" class="p-2 w-full border-[1px] rounded-[8px]" required value="">
+                </div>
+                <div class="flex mt-4 items-center">
+                    <p class="mr-2 text-nowrap">Description :</p>
+                    <input type="text" name="description" class="border-[1px] w-full p-2 rounded-[8px]" value="">
+                </div>
+                <button type="submit" onclick="submitModal()" class="bg-custom-pink p-2 w-full mt-4 rounded-[10px]">Edit
+                    Library</button>
+            </form>
+        </div>
+    </section>
     {{-- !url modal! --}}
     <section class="w-screen h-screen fixed justify-center items-center hidden" id="url-modal">
         <div class="bg-[#1e1e1e] p-4 border-[1px] rounded-[12px] w-4/12">
@@ -89,15 +112,30 @@
             </form>
         </div>
     </section>
-    {{-- delete modal --}}
-    <section class="w-screen h-screen fixed justify-center items-center hidden" id="delete-modal">
+    {{-- modal delete library --}}
+    <section class="w-screen h-screen fixed justify-center items-center hidden" id="library-del">
         <div class="bg-[#1e1e1e] p-4 border-[1px] rounded-[12px] w-2/12">
-            <form action="/home/delete" method="post">
+            <form action="/library/delete" method="post">
                 @csrf
-                <div class="text-2xl text-center cursor-pointer">Delete Libraries?</div>
+                <input type="hidden" name="libraries_id">
+                <div class="text-2xl text-center cursor-pointer">Delete Library?</div>
                 <div class="flex justify-between mt-2 px-8">
                     <input type="hidden" name="libraries_id">
-                    <button type="submit" class="text-xl px-4 py-2 cursor-pointer" id="last-delete">Yes</button>
+                    <button type="submit" class="text-xl px-4 py-2 cursor-pointer">Yes</button>
+                    <p class="text-xl px-4 py-2 cursor-pointer" onclick="closeModal()">Cancel</p>
+                </div>
+            </form>
+        </div>
+    </section>
+    {{-- modal playlist delete --}}
+    <section class="w-screen h-screen fixed justify-center items-center hidden" id="playlist-del">
+        <div class="bg-[#1e1e1e] p-4 border-[1px] rounded-[12px] w-2/12">
+            <form action="/playlist/delete" method="post">
+                @csrf
+                <div class="text-2xl text-center cursor-pointer">Delete Playlist?</div>
+                <div class="flex justify-between mt-2 px-8">
+                    <input type="hidden" name="playlist_id">
+                    <button type="submit" class="text-xl px-4 py-2 cursor-pointer">Yes</button>
                     <p class="text-xl px-4 py-2 cursor-pointer" onclick="closeModal()">Cancel</p>
                 </div>
             </form>
@@ -143,17 +181,17 @@
             <div class="basis-3/4 px-4">
                 <h2 class="text-2xl">Playlist</h2>
                 {{--  --}}
-                <div class="" id="test"></div>
+                <ul class="" id="test"></ul>
             </div>
             <div class="basis-1/4 min-h-80 h-full border-[1px] px-6" id="show-border">
                 <div class="text-2xl" id="library-title"></div>
                 <div class="" id="library-description"></div>
                 <div class="hidden items-center" id="url-btn">
-                    <img src="{{ asset('assets/img/icon_plus_add.svg') }}" class="w-12" onclick="showInput()">
+                    <img src="{{ asset('assets/img/icon_plus_add.svg') }}" class="w-12" onclick="urlInput()">
                     <img src="{{ asset('assets/img/icon_trash.svg') }}" class="ml-2 w-10"
-                        onclick="showDelete()">
+                        onclick="librariesDelete()">
+                    <img src="{{ asset('assets/img/icon_edit.svg') }}" class="ml-2 w-10" onclick="editModal()">
                     <img src="{{ asset('assets/img/icon_play.svg') }}" class="ml-2 w-10">
-                    <img src="{{ asset('assets/img/icon_edit.svg') }}" class="ml-2 w-10" onclick="popModal()">
                 </div>
             </div>
         </div>
@@ -162,9 +200,11 @@
 
     <script>
         const modalLibrary = document.querySelector('#library-modal');
+        const modalEdit = document.querySelector('#library-edit-modal');
         const modalUrl = document.querySelector('#url-modal');
         const btnUrl = document.querySelector('#url-btn');
-        const modalDel = document.querySelector('#delete-modal');
+        const libraryDel = document.querySelector('#library-del');
+        const playlistDel = document.querySelector('#playlist-del');
         //area const for any on play desk.
         const libraryTitle = document.querySelector('#library-title');
         const libraryDesc = document.querySelector('#library-description');
@@ -172,15 +212,24 @@
 
         let deleteId;
 
-        function showDelete() {
-            if (modalDel.style.display === "none") {
-                modalDel.style.display = "flex";
+        function librariesDelete() {
+            if (libraryDel.style.display === "none") {
+                libraryDel.style.display = "flex";
             } else {
-                modalDel.style.display = "none";
+                libraryDel.style.display = "none";
             }
         }
 
-        function showInput() {
+        function modalDelPlay(id) {
+            document.querySelector('#playlist-del input[name="playlist_id"]').value = (id);
+            if (playlistDel.style.display === "none") {
+                playlistDel.style.display = "flex";
+            } else {
+                playlistDel.style.display = "none";
+            }
+        }
+
+        function urlInput() {
             if (modalUrl.style.display === "none") {
                 modalUrl.style.display = "flex";
             } else {
@@ -196,9 +245,15 @@
             }
         }
 
-        function playList(id) {
-            console.log(id);
+        function editModal() {
+            if (modalEdit.style.display === "none") {
+                modalEdit.style.display = "flex";
+            } else {
+                modalEdit.style.display = "none";
+            }
+        }
 
+        function playList(id) {
             fetch('/library/find?id=' + id)
                 .then(response => response.json())
                 .then(data => {
@@ -206,22 +261,36 @@
                     libraryTitle.textContent = data.title;
                     libraryDesc.textContent = data.description;
                     document.querySelector('input[name="libraries_id"]').value = (id);
-                    document.querySelector('#delete-modal input[name="libraries_id"]').value = (id);
+                    document.querySelector('#library-del input[name="libraries_id"]').value = (id);
+                    document.querySelector('#library-edit-modal input[name="libraries_id"]').value = (id);
+                    document.querySelector('#library-edit-modal input[name="title"]').value = data.title;
+                    document.querySelector('#library-edit-modal input[name="description"]').value = data.description;
                 });
-            
-            fetch('/library/playlist/find?id=' + id)
+                
+                fetch('/library/playlist/find?id=' + id)
                 .then(response => response.json())
                 .then(list => {
+                    playlistTest.innerHTML = '';
                     list.forEach(play => {
-                        playlistTest.innerHTML = play.songs;
+                        let list = 
+                            `<div class="flex justify-between items-center w-full border-b-[1px] mt-2">
+                                <div class="flex">
+                                    <img class="mr-10" src="{{ asset('assets/img/icon_menu_stripes.svg') }}">
+                                    <div class="text-xl">${play.songs}</div>
+                                </div>
+                                <img class="" src="{{ asset('assets/img/icon_trash.svg') }}" onclick="modalDelPlay(${play.id})">
+                            </div>`
+                        playlistTest.insertAdjacentHTML("beforeend", list)
                     });
                 });
         }
 
         function closeModal() {
             modalLibrary.style.display = "none";
+            modalEdit.style.display = "none";
             modalUrl.style.display = "none";
-            modalDel.style.display = "none";
+            libraryDel.style.display = "none";
+            playlistDel.style.display = "none";
         }
 
         function submitModal() {
