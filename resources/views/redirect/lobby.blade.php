@@ -82,18 +82,21 @@
                 <input type="hidden" name="libraries_id">
                 <div class="flex items-center">
                     <p class="mr-2 text-nowrap">Library's Name :</p>
-                    <input type="text" name="title" class="p-2 w-full border-[1px] rounded-[8px]" required value="">
+                    <input type="text" name="title" class="p-2 w-full border-[1px] rounded-[8px]" required
+                        value="">
                 </div>
                 <div class="flex mt-4 items-center">
                     <p class="mr-2 text-nowrap">Description :</p>
-                    <input type="text" name="description" class="border-[1px] w-full p-2 rounded-[8px]" value="">
+                    <input type="text" name="description" class="border-[1px] w-full p-2 rounded-[8px]"
+                        value="">
                 </div>
-                <button type="submit" onclick="submitModal()" class="bg-custom-pink p-2 w-full mt-4 rounded-[10px]">Edit
+                <button type="submit" onclick="submitModal()"
+                    class="bg-custom-pink p-2 w-full mt-4 rounded-[10px]">Edit
                     Library</button>
             </form>
         </div>
     </section>
-    {{-- !url modal! --}}
+    {{-- !modal add playlist! --}}
     <section class="w-screen h-screen fixed justify-center items-center hidden" id="url-modal">
         <div class="bg-[#1e1e1e] p-4 border-[1px] rounded-[12px] w-4/12">
             <div class="flex justify-between items-center">
@@ -103,6 +106,25 @@
             <form action="/home/playlist" method="post" class="mt-4">
                 @csrf
                 <input type="hidden" name="libraries_id" value="">
+                <input name="songs" type="text" class="p-2 w-full border-[1px] rounded-[4px]"
+                    placeholder="Title song">
+                <input name="url_link" type="text" class="p-2 w-full border-[1px] rounded-[4px] mt-4"
+                    placeholder="Your URL">
+                <button type="submit" onclick="submitModal()"
+                    class="bg-custom-pink p-2 w-full mt-4 rounded-[10px]">Enter</button>
+            </form>
+        </div>
+    </section>
+    {{-- modal update playlist --}}
+    <section class="w-screen h-screen fixed justify-center items-center hidden" id="modal-url-update">
+        <div class="bg-[#1e1e1e] p-4 border-[1px] rounded-[12px] w-4/12">
+            <div class="flex justify-between items-center">
+                <p class="text-2xl">Edit Playlist :</p>
+                <button onclick="closeModal()" class="bg-red-400 border-[1px] px-2 rounded-[4px]">X</button>
+            </div>
+            <form action="/home/edit/playlist" method="post" class="mt-4">
+                @csrf
+                <input type="hidden" name="playlist_id" value="">
                 <input name="songs" type="text" class="p-2 w-full border-[1px] rounded-[4px]"
                     placeholder="Title song">
                 <input name="url_link" type="text" class="p-2 w-full border-[1px] rounded-[4px] mt-4"
@@ -202,6 +224,7 @@
         const modalLibrary = document.querySelector('#library-modal');
         const modalEdit = document.querySelector('#library-edit-modal');
         const modalUrl = document.querySelector('#url-modal');
+        const modalUpdateUrl = document.querySelector('#modal-url-update');
         const btnUrl = document.querySelector('#url-btn');
         const libraryDel = document.querySelector('#library-del');
         const playlistDel = document.querySelector('#playlist-del');
@@ -226,6 +249,21 @@
                 playlistDel.style.display = "flex";
             } else {
                 playlistDel.style.display = "none";
+            }
+        }
+
+        function modalUpdatePlay(id) {
+            fetch('/playlist/find?id=' + id)
+                .then(response => response.json()) 
+                .then(alpha => {
+                    document.querySelector('#modal-url-update input[name="playlist_id"]').value = (id);
+                    document.querySelector('#modal-url-update input[name="songs"]').value = alpha.songs;
+                    document.querySelector('#modal-url-update input[name="url_link"]').value = alpha.url_link;
+                });
+            if (modalUpdateUrl.style.display === "none") {
+                modalUpdateUrl.style.display = "flex";
+            } else {
+                modalUpdateUrl.style.display = "none";
             }
         }
 
@@ -260,27 +298,30 @@
                     btnUrl.style.display = "flex";
                     libraryTitle.textContent = data.title;
                     libraryDesc.textContent = data.description;
-                    document.querySelector('input[name="libraries_id"]').value = (id);
+                    document.querySelector('#url-modal input[name="libraries_id"]').value = (id);
                     document.querySelector('#library-del input[name="libraries_id"]').value = (id);
                     document.querySelector('#library-edit-modal input[name="libraries_id"]').value = (id);
                     document.querySelector('#library-edit-modal input[name="title"]').value = data.title;
                     document.querySelector('#library-edit-modal input[name="description"]').value = data.description;
                 });
-                
-                fetch('/library/playlist/find?id=' + id)
+
+            fetch('/library/playlist/find?id=' + id)
                 .then(response => response.json())
                 .then(list => {
                     playlistTest.innerHTML = '';
                     list.forEach(play => {
-                        let list = 
+                        let list =
                             `<div class="flex justify-between items-center w-full border-b-[1px] mt-2">
                                 <div class="flex">
                                     <img class="mr-10" src="{{ asset('assets/img/icon_menu_stripes.svg') }}">
                                     <div class="text-xl">${play.songs}</div>
                                 </div>
-                                <img class="" src="{{ asset('assets/img/icon_trash.svg') }}" onclick="modalDelPlay(${play.id})">
+                                <div class="flex">
+                                    <button class="mr-2 px-2" onclick="modalUpdatePlay(${play.id})">Edit</button>
+                                    <button class="ml-2 px-2 bg-custom-pink rounded-[4px]" onclick="modalDelPlay(${play.id})">Hapus</button>
+                                </div>
                             </div>`
-                        playlistTest.insertAdjacentHTML("beforeend", list)
+                        playlistTest.insertAdjacentHTML("beforeend", list);
                     });
                 });
         }
@@ -289,6 +330,7 @@
             modalLibrary.style.display = "none";
             modalEdit.style.display = "none";
             modalUrl.style.display = "none";
+            modalUpdateUrl.style.display = "none";
             libraryDel.style.display = "none";
             playlistDel.style.display = "none";
         }

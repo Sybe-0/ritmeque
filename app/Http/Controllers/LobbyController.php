@@ -17,18 +17,24 @@ class LobbyController extends Controller
         return view('redirect.lobby', compact('datalibrary'));
     }
 
-    public function see(Request $request)
-    {
-        $dataplaylist = Playlist::where('libraries_id', $request->id)->get();
-        return response()->json($dataplaylist);
-    }
-
-    public function show(Request $request)
+    public function searchLibrary(Request $request)
     {
         $datalibrary = Library::findOrFail($request->id);
         return response()->json($datalibrary);
     }
 
+    public function searchPlaylist(Request $request)
+    {
+        $dataplaylist = Playlist::where('libraries_id', $request->id)->get();
+        return response()->json($dataplaylist);
+    }
+
+    public function searchPlaylistFetch(Request $request)
+    {
+        $test = Playlist::where('libraries_id', $request->id)->get();
+        return response()->json($test);
+    }
+    
     public function logout()
     {
         Auth::logout();
@@ -57,7 +63,7 @@ class LobbyController extends Controller
         return redirect('/home');
     }
 
-    public function update(Request $request)
+    public function updateLibrary(Request $request)
     {
         $request->validate([
             'title' => 'required',
@@ -80,6 +86,20 @@ class LobbyController extends Controller
         ]);
         Playlist::create($playlistAdd);
         return redirect('/home');
+    }
+
+    public function updatePlaylist(Request $request)
+    {
+        $request->validate([
+            'songs' => 'required',
+            'url_link' => 'required',
+            'playlist_id' => 'required',
+        ]);
+        $playlist = Playlist::find($request->playlist_id);
+        $playlist->songs = $request->songs;
+        $playlist->url_link = $request->url_link;
+        $playlist->save();
+        return redirect('/');
     }
     
     public function destroyLibrary(Request $request)
