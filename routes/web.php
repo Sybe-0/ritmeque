@@ -40,4 +40,8 @@ Route::get('auth/google/callback', [AuthController::class, 'handleGoogleCallback
 Route::get('auth/facebook', [AuthController::class, 'redirectToFacebook']);
 Route::get('auth/facebook/callback', [AuthController::class, 'handleFacebookCallback']);
 
+Route::get('/testing', function() {
+    return "No Power";
+});
+
 // Route::get('/library/test/{id}', [LobbyController::class, 'testGetId'])->name('test-library');
