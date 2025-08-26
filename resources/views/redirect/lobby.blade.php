@@ -245,11 +245,19 @@
 
         function modalDelPlay(id) {
             document.querySelector('#playlist-del input[name="playlist_id"]').value = (id);
-            if (playlistDel.style.display === "none") {
-                playlistDel.style.display = "flex";
-            } else {
-                playlistDel.style.display = "none";
-            }
+            
+            // example for tenary condition
+            playlistDel.style.display = !playlistDel.style.display ? 'flex' : (playlistDel.style.display === 'none' ? 'flex' : 'none')
+
+            // if (!playlistDel.style.display) {
+            //     playlistDel.style.display = "flex";
+            // } else {
+            //     if (playlistDel.style.display === "none") {
+            //         playlistDel.style.display = "flex";
+            //     } else {
+            //         playlistDel.style.display = "none";
+            //     }
+            // }
         }
 
         function modalUpdatePlay(id) {
