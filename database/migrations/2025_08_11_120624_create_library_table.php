@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('platform');
             $table->string('description');
             $table->timestamps();
+
+            $table->foreign('users_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
