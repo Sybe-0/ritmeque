@@ -31,7 +31,7 @@ class LobbyController extends Controller
 
     public function searchPlaylistFetch(Request $request)
     {
-        $test = Playlist::where('libraries_id', $request->id)->get();
+        $test = Playlist::where('id', $request->id)->first();
         return response()->json($test);
     }
     

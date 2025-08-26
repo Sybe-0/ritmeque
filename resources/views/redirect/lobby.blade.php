@@ -254,8 +254,10 @@
 
         function modalUpdatePlay(id) {
             fetch('/playlist/find?id=' + id)
-                .then(response => response.json()) 
+                .then(response => response.json())
                 .then(alpha => {
+                    console.log(alpha);
+
                     document.querySelector('#modal-url-update input[name="playlist_id"]').value = (id);
                     document.querySelector('#modal-url-update input[name="songs"]').value = alpha.songs;
                     document.querySelector('#modal-url-update input[name="url_link"]').value = alpha.url_link;
@@ -322,6 +324,9 @@
                                 </div>
                             </div>`
                         playlistTest.insertAdjacentHTML("beforeend", list);
+                        document.querySelector('#modal-url-update input[name="songs"]').value = play.songs;
+                        document.querySelector('#modal-url-update input[name="url_link"]').value = play
+                            .url_link;
                     });
                 });
         }
