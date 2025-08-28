@@ -7,34 +7,43 @@ use App\Models\Library;
 use App\Models\Playlist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class LobbyController extends Controller
 {
     public function index()
     {
         $userId = Auth::id();
-        $datalibrary = Library::where('users_id', $userId)->get();
+        $datalibrary = DB::select("SELECT * FROM libraries WHERE users_id = '$userId'");
+        // $data = Library::where('users_id', $userId)->get();
+        // dd($datalibrary, collect($data)->toArray());
         return view('redirect.lobby', compact('datalibrary'));
     }
 
-    public function searchLibrary(Request $request)
+    public function findLibrary(Request $request)
     {
-        $datalibrary = Library::findOrFail($request->id);
-        return response()->json($datalibrary);
+        $idLibrary = $request->id;
+        $library = DB::select("SELECT * from libraries where id = '$idLibrary'");
+        return response()->json($library);
+        // $datalibrary = Library::findOrFail($request->id);
     }
 
-    public function searchPlaylist(Request $request)
+    public function findPlaylist(Request $request)
     {
-        $dataplaylist = Playlist::where('libraries_id', $request->id)->get();
+        $idPlaylist = $request->id;
+        $dataplaylist = DB::select("SELECT * from playlist_songs where id = '$idPlaylist'");
         return response()->json($dataplaylist);
+        // $dataplaylist = Playlist::where('libraries_id', $request->id)->get();
     }
 
-    public function searchPlaylistFetch(Request $request)
+    public function findPlaylistFetch(Request $request)
     {
-        $test = Playlist::where('id', $request->id)->first();
-        return response()->json($test);
+        $idFetch = $request->id;
+        $fetch = DB::select("SELECT * from playlist_songs where id = '$idFetch' LIMIT 1");
+        return response()->json($fetch);
+        // $test = Playlist::where('id', $request->id)->first();
     }
-    
+
     public function logout()
     {
         Auth::logout();
@@ -46,7 +55,7 @@ class LobbyController extends Controller
         return redirect('/home');
     }
 
-    public function library(Request $request)
+    public function createLibrary(Request $request)
     {
         $libraryAdd = $request->validate([
             'title' => 'required|string|max:40',
@@ -58,8 +67,9 @@ class LobbyController extends Controller
 
         $libraryAdd['users_id']=$userId;
 
-        Library::create($libraryAdd);
+        // DB::select('CREATE * from libraries');
 
+        Library::create($libraryAdd);
         return redirect('/home');
     }
 
@@ -77,7 +87,7 @@ class LobbyController extends Controller
         return redirect('/');
     }
 
-    public function playlist(Request $request)
+    public function createPlaylist(Request $request)
     {
         $playlistAdd = $request->validate([
             'songs' => 'required|string',
@@ -101,7 +111,7 @@ class LobbyController extends Controller
         $playlist->save();
         return redirect('/');
     }
-    
+
     public function destroyLibrary(Request $request)
     {
         $deletelibrary = $request->validate([

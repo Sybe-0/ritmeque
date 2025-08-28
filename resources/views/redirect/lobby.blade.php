@@ -324,12 +324,9 @@
                                 </div>
                             </div>`
                         playlistTest.insertAdjacentHTML("beforeend", list);
-                        document.querySelector('#modal-url-update input[name="songs"]').value = play.songs;
-                        document.querySelector('#modal-url-update input[name="url_link"]').value = play
-                            .url_link;
                     });
                 });
-        }
+            }
 
         function closeModal() {
             modalLibrary.style.display = "none";
