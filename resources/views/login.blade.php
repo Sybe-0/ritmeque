@@ -33,7 +33,7 @@
 
             <form action="/signin" method="post" class="flex flex-col items-center">
                 @csrf
-                <input type="text" name="email" placeholder="Email" class="media-main-input mb-2.5" required>
+                <input type="text" name="username" placeholder="Username" class="media-main-input mb-2.5" required>
                 <input type="password" name="password" placeholder="Password" class="media-main-input" required>
                 <div class="mt-2 mb-3 w-full flex justify-between">
                     <div class="mx-4 flex items-center">

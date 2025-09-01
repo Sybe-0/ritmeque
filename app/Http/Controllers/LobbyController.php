@@ -14,7 +14,7 @@ class LobbyController extends Controller
     public function index()
     {
         $userId = Auth::id();
-        $datalibrary = DB::select("SELECT * FROM libraries WHERE users_id = '$userId'");
+        $datalibrary = DB::select('SELECT * FROM libraries WHERE users_id = ?', [$userId]);
         // $data = Library::where('users_id', $userId)->get();
         // dd($datalibrary, collect($data)->toArray());
         return view('redirect.lobby', compact('datalibrary'));
@@ -23,7 +23,7 @@ class LobbyController extends Controller
     public function findLibrary(Request $request)
     {
         $idLibrary = $request->id;
-        $library = DB::select("SELECT * from libraries where id = '$idLibrary'");
+        $library = DB::select('SELECT * from libraries where id = ?', [$idLibrary]);
         return response()->json($library);
         // $datalibrary = Library::findOrFail($request->id);
     }
@@ -31,7 +31,7 @@ class LobbyController extends Controller
     public function findPlaylist(Request $request)
     {
         $idPlaylist = $request->id;
-        $dataplaylist = DB::select("SELECT * from playlist_songs where id = '$idPlaylist'");
+        $dataplaylist = DB::select('SELECT * from playlist_songs where id = ?', [$idPlaylist]);
         return response()->json($dataplaylist);
         // $dataplaylist = Playlist::where('libraries_id', $request->id)->get();
     }
@@ -39,7 +39,7 @@ class LobbyController extends Controller
     public function findPlaylistFetch(Request $request)
     {
         $idFetch = $request->id;
-        $fetch = DB::select("SELECT * from playlist_songs where id = '$idFetch' LIMIT 1");
+        $fetch = DB::select('SELECT * from playlist_songs where id = ? LIMIT 1', [$idFetch  ]);
         return response()->json($fetch);
         // $test = Playlist::where('id', $request->id)->first();
     }
@@ -60,17 +60,21 @@ class LobbyController extends Controller
         $libraryAdd = $request->validate([
             'title' => 'required|string|max:40',
             'platform' => 'required',
-            'description' => 'string',
+            'description' => 'required|string',
         ]);
 
         $userId = Auth::user()->id;
 
         $libraryAdd['users_id']=$userId;
 
-        // DB::select('CREATE * from libraries');
+        $title = $request->input('title');
+        $description = $request->input('description');
+        $platform = $request->input('platform');
 
-        Library::create($libraryAdd);
-        return redirect('/home');
+        $insert = DB::insert('INSERT into libraries (title, description, platform, users_id) values (?, ?, ?, ?)', [$title, $description, $platform, $userId]);
+        dd($insert);
+        // Library::create($libraryAdd);
+        return redirect('/home')->with('Succes', 'Library has created!');
     }
 
     public function updateLibrary(Request $request)
