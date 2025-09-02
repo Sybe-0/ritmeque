@@ -39,13 +39,3 @@ Route::get('auth/google/callback', [AuthController::class, 'handleGoogleCallback
 
 Route::get('auth/facebook', [AuthController::class, 'redirectToFacebook']);
 Route::get('auth/facebook/callback', [AuthController::class, 'handleFacebookCallback']);
-
-<<<<<<< HEAD
-// Route::get('/library/test/{id}', [LobbyController::class, 'testGetId'])->name('test-library');
-=======
-Route::get('/testing', function() {
-    return "No Power";
-});
-
-// Route::get('/library/test/{id}', [LobbyController::class, 'testGetId'])->name('test-library');
->>>>>>> 124874ee67b4db264b22bcd4d6771e8b6b9f865f

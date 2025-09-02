@@ -23,15 +23,15 @@ class LobbyController extends Controller
     public function findLibrary(Request $request)
     {
         $idLibrary = $request->id;
-        $library = DB::select('SELECT * from libraries where id = ?', [$idLibrary]);
-        return response()->json($library);
+        $library = DB::select('SELECT * from libraries where id = ? LIMIT 1', [$idLibrary]);
+        return response()->json($library[0]);
         // $datalibrary = Library::findOrFail($request->id);
     }
 
     public function findPlaylist(Request $request)
     {
         $idPlaylist = $request->id;
-        $dataplaylist = DB::select('SELECT * from playlist_songs where id = ?', [$idPlaylist]);
+        $dataplaylist = DB::select('SELECT * from playlist_songs where libraries_id = ?', [$idPlaylist]);
         return response()->json($dataplaylist);
         // $dataplaylist = Playlist::where('libraries_id', $request->id)->get();
     }
@@ -39,8 +39,8 @@ class LobbyController extends Controller
     public function findPlaylistFetch(Request $request)
     {
         $idFetch = $request->id;
-        $fetch = DB::select('SELECT * from playlist_songs where id = ? LIMIT 1', [$idFetch  ]);
-        return response()->json($fetch);
+        $fetch = DB::select('SELECT * from playlist_songs where id = ? LIMIT 1', [$idFetch]);
+        return response()->json($fetch[0]);
         // $test = Playlist::where('id', $request->id)->first();
     }
 
@@ -71,8 +71,8 @@ class LobbyController extends Controller
         $description = $request->input('description');
         $platform = $request->input('platform');
 
-        $insert = DB::insert('INSERT into libraries (title, description, platform, users_id) values (?, ?, ?, ?)', [$title, $description, $platform, $userId]);
-        dd($insert);
+        $insert = DB::insert('INSERT into libraries (title, description, platform, users_id, create_at, update_at) values (?, ?, ?, ?, NOW(), NOW())', [$title, $description, $platform, $userId]);
+        // dd($insert);
         // Library::create($libraryAdd);
         return redirect('/home')->with('Succes', 'Library has created!');
     }
@@ -84,11 +84,21 @@ class LobbyController extends Controller
             'description' => 'required',
             'libraries_id' => 'required',
         ]);
-        $editId = Library::find($request->libraries_id);
-        $editId->title = $request->title;
-        $editId->description = $request->description;
-        $editId->save();
-        return redirect('/');
+        // $editLibrary = Library::find($request->libraries_id);
+        // $editLibrary->title = $request->title;
+        // $editLibrary->description = $request->description;
+        // $editId->save();
+
+        $title = $request->input('title');
+        $description = $request->input('description');
+        $idLibrary = $request->libraries_id;
+        $editLibrary = DB::update('UPDATE libraries set title = ?, description = ? where id = ?', [$title, $description, $idLibrary]);
+        if ($editLibrary) {
+            return redirect('/home')->with('success', 'Library has updated!');
+        } else {
+            return redirect('/')->with('error', 'Error to update the library');
+        }
+        // dd();
     }
 
     public function createPlaylist(Request $request)
@@ -98,7 +108,13 @@ class LobbyController extends Controller
             'url_link' => 'required|string|url',
             'libraries_id' => 'required',
         ]);
-        Playlist::create($playlistAdd);
+        $songs = $request->input('songs');
+        $link = $request->input('url_link');
+        $libraries = $request->input('libraries_id');
+        $result = DB::insert('INSERT into playlist_songs (songs, url_link, libraries_id, create_at, update_at) values (?, ?, ?, NOW(), NOW())', [$songs, $link, $libraries]);
+        // dd($result);
+
+        // Playlist::create($playlistAdd);
         return redirect('/home');
     }
 
@@ -109,20 +125,29 @@ class LobbyController extends Controller
             'url_link' => 'required',
             'playlist_id' => 'required',
         ]);
-        $playlist = Playlist::find($request->playlist_id);
-        $playlist->songs = $request->songs;
-        $playlist->url_link = $request->url_link;
-        $playlist->save();
+        $songs = $request->input('songs');
+        $link = $request->input('url_link');
+        $idPlaylist = $request->playlist_id;
+        DB::update('UPDATE playlist_songs set songs = ?, url_link = ? where id = ?', [$songs, $link, $idPlaylist]);
+
+        // $playlist = Playlist::find($request->playlist_id);
+        // $playlist->songs = $request->songs;
+        // $playlist->url_link = $request->url_link;
+        // $playlist->save();
         return redirect('/');
     }
 
     public function destroyLibrary(Request $request)
     {
-        $deletelibrary = $request->validate([
+        $request->validate([
             'libraries_id' => 'required',
         ]);
-        $library = Library::find($request->libraries_id);
-        $library->delete();
+        $idLibrary = $request->libraries_id;
+        DB::delete('DELETE from libraries where id = ?', [$idLibrary]);
+        // dd($library);
+
+        // $library = Library::find($request->libraries_id);
+        // $library->delete();
         return redirect('/home');
     }
 
@@ -131,8 +156,11 @@ class LobbyController extends Controller
         $request->validate([
             'playlist_id' => 'required',
         ]);
-        $playlist = Playlist::find($request->playlist_id);
-        $playlist->delete();
+        $idPlaylist = $request->playlist_id;
+        DB::delete('DELETE from playlist_songs where id = ?', [$idPlaylist]);
+
+        // $playlist = Playlist::find($request->playlist_id);
+        // $playlist->delete();
         return redirect('/');
     }
 

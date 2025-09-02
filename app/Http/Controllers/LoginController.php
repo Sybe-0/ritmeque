@@ -24,7 +24,7 @@ class LoginController extends Controller
 
         $username = $request->input('username');
         $password = $request->input('password');
-        $remember = $request->input('remember');
+        $remember = $request->has('remember');
 
         $user = DB::select('SELECT * from users where username = ?', [$username]);
 
@@ -32,18 +32,17 @@ class LoginController extends Controller
             $user = $user[0];
 
             if (password_verify($password, $user->password)) {
-                if ($remember) {
-                    $rememberToken = Str::random(60);
-                    DB::update('UPDATE users SET remember_token = ? WHERE id = ?', [$rememberToken, $user->id]);
-
-                    Cookie::queue('remember_token', $rememberToken, 4320);
+                if (Auth::attempt($credentials, $remember)) {
+                    // $rememberToken = Str::random(60);
+                    // DB::update('UPDATE users SET remember_token = ? WHERE id = ?', [$rememberToken, $user->id]);
+                    // Cookie::queue('remember_token', $rememberToken, 4320);
+                    $request->session(['users_id' => $user->id])->regenerate();
+                    return redirect()->intended('/');
                 }
-                session(['users_id' => $user->id]);
                 // return response()->json(['massage' => 'Login berhasil', 'user' => $user]);
             } else {
                 return response()->json(['massage' => 'Password tidak ditemukan'], 401);
             }
-            return redirect()->intended('/');
         } else {
             return response()->json(['massage' => 'User tidak ditemukan'], 404);
         }

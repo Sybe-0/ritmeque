@@ -142,7 +142,6 @@
                 <input type="hidden" name="libraries_id">
                 <div class="text-2xl text-center cursor-pointer">Delete Library?</div>
                 <div class="flex justify-between mt-2 px-8">
-                    <input type="hidden" name="libraries_id">
                     <button type="submit" class="text-xl px-4 py-2 cursor-pointer">Yes</button>
                     <p class="text-xl px-4 py-2 cursor-pointer" onclick="closeModal()">Cancel</p>
                 </div>
@@ -245,7 +244,7 @@
 
         function modalDelPlay(id) {
             document.querySelector('#playlist-del input[name="playlist_id"]').value = (id);
-            
+
             // example for tenary condition
             playlistDel.style.display = !playlistDel.style.display ? 'flex' : (playlistDel.style.display === 'none' ? 'flex' : 'none')
 
