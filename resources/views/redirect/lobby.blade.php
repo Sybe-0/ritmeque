@@ -103,7 +103,7 @@
                 <p class="text-2xl">Insert URL :</p>
                 <button onclick="closeModal()" class="bg-red-400 border-[1px] px-2 rounded-[4px]">X</button>
             </div>
-            <form action="/home/playlist" method="post" class="mt-4">
+            <form class="mt-4" id="form-add-playlist">
                 @csrf
                 <input type="hidden" name="libraries_id" value="">
                 <input name="songs" type="text" class="p-2 w-full border-[1px] rounded-[4px]"
@@ -122,7 +122,7 @@
                 <p class="text-2xl">Edit Playlist :</p>
                 <button onclick="closeModal()" class="bg-red-400 border-[1px] px-2 rounded-[4px]">X</button>
             </div>
-            <form action="/home/edit/playlist" method="post" class="mt-4">
+            <form class="mt-4" id="form-update-playlist">
                 @csrf
                 <input type="hidden" name="playlist_id" value="">
                 <input name="songs" type="text" class="p-2 w-full border-[1px] rounded-[4px]"
@@ -151,7 +151,7 @@
     {{-- modal playlist delete --}}
     <section class="w-screen h-screen fixed justify-center items-center hidden" id="playlist-del">
         <div class="bg-[#1e1e1e] p-4 border-[1px] rounded-[12px] w-2/12">
-            <form action="/playlist/delete" method="post">
+            <form id="form-delete-playlist">
                 @csrf
                 <div class="text-2xl text-center cursor-pointer">Delete Playlist?</div>
                 <div class="flex justify-between mt-2 px-8">
@@ -214,6 +214,7 @@
                     <img src="{{ asset('assets/img/icon_edit.svg') }}" class="ml-2 w-10" onclick="editModal()">
                     <img src="{{ asset('assets/img/icon_play.svg') }}" class="ml-2 w-10">
                 </div>
+                <div id="responseMassage"></div>
             </div>
         </div>
         {{-- <a target="blank" href="{{ route('test-library', '3') }}">Test</a> --}}
@@ -232,7 +233,63 @@
         const libraryDesc = document.querySelector('#library-description');
         const playlistTest = document.querySelector('#test');
 
-        let deleteId;
+        document.querySelector('#form-update-playlist').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const upd = e.target;
+            const updData = new FormData(upd);
+
+            fetch("{{ route('upd.playlist') }}", {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': updData.get('_token'),
+                    'Accept': 'application/json',
+                },
+                body:updData
+            })
+            .then(response => response.json())
+            .then(data => {
+                playList(data.libraries_id)
+            })
+        });
+
+        document.querySelector('#form-delete-playlist').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const del = e.target;
+            const delData = new FormData(del);
+
+            fetch("{{ route('del.playlist') }}", {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': delData.get('_token'),
+                    'Accept': 'application/json',
+                },
+                body:delData
+            })
+            .then(response => response.json())
+            .then(data => {
+                playList(data.libraries_id)
+            })
+        });
+
+        document.querySelector('#form-add-playlist').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const add = e.target;
+            const addData = new FormData(add);
+
+            fetch("{{ route('add.playlist') }} ", {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': addData.get('_token'),
+                    'Accept': 'application/json',
+                },
+                body:addData
+            })
+            .then(response => response.json())
+            .then(data => {
+                playList(data.libraries_id)
+            })
+        });
 
         function librariesDelete() {
             if (libraryDel.style.display === "none") {

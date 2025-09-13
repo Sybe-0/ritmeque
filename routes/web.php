@@ -19,13 +19,13 @@ Route::post('/signin', [LoginController::class, 'authenticate']);
 Route::get('/home', [LobbyController::class, 'index']);
 Route::post('/home/library', [LobbyController::class, 'createLibrary'])->middleware('auth');
 Route::post('/home/edit/library', [LobbyController::class, 'updateLibrary']);
-Route::post('/home/playlist', [LobbyController::class, 'createPlaylist']);
-Route::post('/home/edit/playlist', [LobbyController::class, 'updatePlaylist']);
+Route::post('/home/playlist', [LobbyController::class, 'createPlaylist'])->name('add.playlist');
+Route::post('/home/edit/playlist', [LobbyController::class, 'updatePlaylist'])->name('upd.playlist');
 Route::post('/logout', [LobbyController::class, 'logout'])->middleware('auth');
 Route::redirect('/', '/home', 301);
 
 Route::post('/library/delete', [LobbyController::class, 'destroyLibrary'])->name('library.delete');
-Route::post('/playlist/delete', [LobbyController::class, 'destroyPlaylist'])->name('library.delete');
+Route::post('/playlist/delete', [LobbyController::class, 'destroyPlaylist'])->name('del.playlist');
 
 Route::get('/library/find', [LobbyController::class, 'findLibrary']);
 Route::get('/library/playlist/find', [LobbyController::class, 'findPlaylist']);

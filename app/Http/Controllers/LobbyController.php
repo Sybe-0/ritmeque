@@ -14,8 +14,8 @@ class LobbyController extends Controller
     public function index()
     {
         $userId = Auth::id();
-        $datalibrary = DB::select('SELECT * FROM libraries WHERE users_id = ?', [$userId]);
-        // $data = Library::where('users_id', $userId)->get();
+        // $datalibrary = DB::select('SELECT * FROM libraries WHERE users_id = ?', [$userId]);
+        $datalibrary = Library::where('users_id', $userId)->get();
         // dd($datalibrary, collect($data)->toArray());
         return view('redirect.lobby', compact('datalibrary'));
     }
@@ -23,25 +23,28 @@ class LobbyController extends Controller
     public function findLibrary(Request $request)
     {
         $idLibrary = $request->id;
-        $library = DB::select('SELECT * from libraries where id = ? LIMIT 1', [$idLibrary]);
-        return response()->json($library[0]);
-        // $datalibrary = Library::findOrFail($request->id);
+        // $library = DB::select('SELECT * from libraries where id = ? LIMIT 1', [$idLibrary]);
+        // return response()->json($library[0]);
+        $library = Library::findOrFail($request->id);
+        return response()->json($library);
     }
 
     public function findPlaylist(Request $request)
     {
         $idPlaylist = $request->id;
-        $dataplaylist = DB::select('SELECT * from playlist_songs where libraries_id = ?', [$idPlaylist]);
+        // $dataplaylist = DB::select('SELECT * from playlist_songs where libraries_id = ?', [$idPlaylist]);
+        // return response()->json($dataplaylist);
+        $dataplaylist = Playlist::where('libraries_id', $request->id)->get();
         return response()->json($dataplaylist);
-        // $dataplaylist = Playlist::where('libraries_id', $request->id)->get();
     }
 
     public function findPlaylistFetch(Request $request)
     {
         $idFetch = $request->id;
-        $fetch = DB::select('SELECT * from playlist_songs where id = ? LIMIT 1', [$idFetch]);
-        return response()->json($fetch[0]);
-        // $test = Playlist::where('id', $request->id)->first();
+        // $fetch = DB::select('SELECT * from playlist_songs where id = ? LIMIT 1', [$idFetch]);
+        // return response()->json($fetch[0]);
+        $fetch = Playlist::where('id', $request->id)->first();
+        return response()->json($fetch);
     }
 
     public function logout()
@@ -65,39 +68,39 @@ class LobbyController extends Controller
 
         $userId = Auth::user()->id;
 
-        $libraryAdd['users_id']=$userId;
+        // $title = $request->input('title');
+        // $description = $request->input('description');
+        // $platform = $request->input('platform');
+        // $insert = DB::insert('INSERT into libraries (title, description, platform, users_id, create_at, update_at) values (?, ?, ?, ?, NOW(), NOW())', [$title, $description, $platform, $userId]);
 
-        $title = $request->input('title');
-        $description = $request->input('description');
-        $platform = $request->input('platform');
-
-        $insert = DB::insert('INSERT into libraries (title, description, platform, users_id, create_at, update_at) values (?, ?, ?, ?, NOW(), NOW())', [$title, $description, $platform, $userId]);
         // dd($insert);
-        // Library::create($libraryAdd);
+
+        $libraryAdd['users_id']=$userId;
+        Library::create($libraryAdd);
         return redirect('/home')->with('Succes', 'Library has created!');
     }
 
     public function updateLibrary(Request $request)
     {
-        $request->validate([
+        $editLibrary = $request->validate([
             'title' => 'required',
             'description' => 'required',
             'libraries_id' => 'required',
         ]);
-        // $editLibrary = Library::find($request->libraries_id);
-        // $editLibrary->title = $request->title;
-        // $editLibrary->description = $request->description;
-        // $editId->save();
+        $editLibrary = Library::find($request->libraries_id);
+        $editLibrary->title = $request->title;
+        $editLibrary->description = $request->description;
+        $editLibrary->save();
 
-        $title = $request->input('title');
-        $description = $request->input('description');
-        $idLibrary = $request->libraries_id;
-        $editLibrary = DB::update('UPDATE libraries set title = ?, description = ? where id = ?', [$title, $description, $idLibrary]);
-        if ($editLibrary) {
-            return redirect('/home')->with('success', 'Library has updated!');
-        } else {
-            return redirect('/')->with('error', 'Error to update the library');
-        }
+        // $title = $request->input('title');
+        // $description = $request->input('description');
+        // $idLibrary = $request->libraries_id;
+        // $editLibrary = DB::update('UPDATE libraries set title = ?, description = ? where id = ?', [$title, $description, $idLibrary]);
+        // if ($editLibrary) {
+        //     return redirect('/home')->with('success', 'Library has updated!');
+        // } else {
+        //     return redirect('/')->with('error', 'Error to update the library');
+        // }
         // dd();
     }
 
@@ -108,14 +111,17 @@ class LobbyController extends Controller
             'url_link' => 'required|string|url',
             'libraries_id' => 'required',
         ]);
-        $songs = $request->input('songs');
-        $link = $request->input('url_link');
-        $libraries = $request->input('libraries_id');
-        $result = DB::insert('INSERT into playlist_songs (songs, url_link, libraries_id, create_at, update_at) values (?, ?, ?, NOW(), NOW())', [$songs, $link, $libraries]);
+        // $songs = $request->input('songs');
+        // $link = $request->input('url_link');
+        // $libraries = $request->input('libraries_id');
+        // $result = DB::insert('INSERT into playlist_songs (songs, url_link, libraries_id, create_at, update_at) values (?, ?, ?, NOW(), NOW())', [$songs, $link, $libraries]);
+
         // dd($result);
 
-        // Playlist::create($playlistAdd);
-        return redirect('/home');
+        $playlist = Playlist::create($playlistAdd);
+        return response()->json([
+            'libraries_id' => $playlist->libraries_id,
+        ]);
     }
 
     public function updatePlaylist(Request $request)
@@ -125,16 +131,18 @@ class LobbyController extends Controller
             'url_link' => 'required',
             'playlist_id' => 'required',
         ]);
-        $songs = $request->input('songs');
-        $link = $request->input('url_link');
-        $idPlaylist = $request->playlist_id;
-        DB::update('UPDATE playlist_songs set songs = ?, url_link = ? where id = ?', [$songs, $link, $idPlaylist]);
+        // $songs = $request->input('songs');
+        // $link = $request->input('url_link');
+        // $idPlaylist = $request->playlist_id;
+        // DB::update('UPDATE playlist_songs set songs = ?, url_link = ? where id = ?', [$songs, $link, $idPlaylist]);
 
-        // $playlist = Playlist::find($request->playlist_id);
-        // $playlist->songs = $request->songs;
-        // $playlist->url_link = $request->url_link;
-        // $playlist->save();
-        return redirect('/');
+        $playlist = Playlist::find($request->playlist_id);
+        $playlist->songs = $request->songs;
+        $playlist->url_link = $request->url_link;
+        $playlist->save();
+        return response()->json([
+            'libraries_id' => $playlist->libraries_id,
+        ]);
     }
 
     public function destroyLibrary(Request $request)
@@ -143,11 +151,11 @@ class LobbyController extends Controller
             'libraries_id' => 'required',
         ]);
         $idLibrary = $request->libraries_id;
-        DB::delete('DELETE from libraries where id = ?', [$idLibrary]);
+        // DB::delete('DELETE from libraries where id = ?', [$idLibrary]);
         // dd($library);
 
-        // $library = Library::find($request->libraries_id);
-        // $library->delete();
+        $idLibrary = Library::find($request->libraries_id);
+        $idLibrary->delete();
         return redirect('/home');
     }
 
@@ -156,12 +164,14 @@ class LobbyController extends Controller
         $request->validate([
             'playlist_id' => 'required',
         ]);
-        $idPlaylist = $request->playlist_id;
-        DB::delete('DELETE from playlist_songs where id = ?', [$idPlaylist]);
+        // $idPlaylist = $request->playlist_id;
+        // DB::delete('DELETE from playlist_songs where id = ?', [$idPlaylist]);
 
-        // $playlist = Playlist::find($request->playlist_id);
-        // $playlist->delete();
-        return redirect('/');
+        $idPlaylist = Playlist::find($request->playlist_id);
+        $idPlaylist->delete();
+        return response()->json([
+            'libraries_id' => $idPlaylist->libraries_id,
+        ]);
     }
 
     // public function testGetId($id) {
