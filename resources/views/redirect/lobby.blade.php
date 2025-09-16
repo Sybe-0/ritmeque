@@ -10,12 +10,16 @@
 </head>
 
 <body class="bg-custom-darkblue flex box-border h-screen max-h-screen">
-    <section class="bg-custom-pink basis-1/4 h-screen">
+    <section class="bg-custom-pink basis-1/4 min-w-3/12 h-screen fixed top-0 left-0">
         <div class="flex items-center p-2 mt-1.5">
             <img src="{{ asset('assets/img/icon_not.svg') }}" class="mr-2">
             <h1 class="font-semibold text-2xl">Your Library</h1>
         </div>
         <div class="bg-white w-full h-0.5 mb-1"></div>
+        <div class="flex items-center p-2">
+            <input class="flex items-center p-2 rounded-[8px] text-xl w-full bg-pink-700" name="query"
+                placeholder="Search Library" id="search-library"></input>
+        </div>
         <div class="flex items-center p-2">
             <button onclick="popModal()" class="flex items-center p-2 rounded-[8px] text-xl w-full bg-pink-900">
                 <img src="{{ asset('assets/img/icon_plus_only.svg') }}" class="mr-2">New Library
@@ -23,25 +27,21 @@
         </div>
         </div>
         <div class="flex items-center p-2">
-            <img src="{{ asset('assets/img/icon_love.svg') }}" class="mr-2">
-            <p class="text-xl">Favorit</p>
+            <p class="text-xl ml-2" onclick="libraryList()">All Libraries</p>
         </div>
         <div class="flex items-center p-2">
-            <img src="{{ asset('assets/img/icon_recently.svg') }}" class="mr-2">
-            <p class="text-xl">Recently View</p>
+            <p class="text-xl ml-2">Favorit</p>
         </div>
         <div class="flex items-center p-2">
-            <img src="{{ asset('assets/img/icon_setting.svg') }}" class="mr-2">
-            <p class="text-xl">Setting</p>
+            <p class="text-xl ml-2">Recently View</p>
         </div>
         <div class="flex items-center p-2">
-            <img src="{{ asset('assets/img/icon_info.svg') }}" class="mr-2">
-            <p class="text-xl">About</p>
+            <p class="text-xl ml-2">About</p>
         </div>
     </section>
 
     {{-- !modal add library! --}}
-    <section class="w-screen h-screen fixed justify-center items-center hidden" id="library-modal">
+    <section class="w-screen h-screen fixed z-10 justify-center items-center hidden" id="library-modal">
         <div class="bg-[#1e1e1e] p-4 border-[1px] rounded-[12px] w-4/12">
             <div class="flex justify-between items-center">
                 <p class="text-2xl">Create Your Library :</p>
@@ -70,14 +70,14 @@
             </form>
         </div>
     </section>
-    {{-- !modal edit library! --}}
-    <section class="w-screen h-screen fixed justify-center items-center hidden" id="library-edit-modal">
+    {{-- !modal update library! --}}
+    <section class="w-screen h-screen fixed z-11 justify-center items-center hidden" id="library-edit-modal">
         <div class="bg-[#1e1e1e] p-4 border-[1px] rounded-[12px] w-4/12">
             <div class="flex justify-between items-center">
                 <p class="text-2xl">Edit Your Library :</p>
                 <button onclick="closeModal()" class="bg-red-400 border-[1px] px-2 rounded-[4px]">X</button>
             </div>
-            <form action="/home/edit/library" method="post" class="mt-4">
+            <form class="mt-4" id="form-update-library">
                 @csrf
                 <input type="hidden" name="libraries_id">
                 <div class="flex items-center">
@@ -97,7 +97,7 @@
         </div>
     </section>
     {{-- !modal add playlist! --}}
-    <section class="w-screen h-screen fixed justify-center items-center hidden" id="url-modal">
+    <section class="w-screen h-screen fixed z-12 justify-center items-center hidden" id="url-modal">
         <div class="bg-[#1e1e1e] p-4 border-[1px] rounded-[12px] w-4/12">
             <div class="flex justify-between items-center">
                 <p class="text-2xl">Insert URL :</p>
@@ -116,7 +116,7 @@
         </div>
     </section>
     {{-- modal update playlist --}}
-    <section class="w-screen h-screen fixed justify-center items-center hidden" id="modal-url-update">
+    <section class="w-screen h-screen fixed z-13 justify-center items-center hidden" id="modal-url-update">
         <div class="bg-[#1e1e1e] p-4 border-[1px] rounded-[12px] w-4/12">
             <div class="flex justify-between items-center">
                 <p class="text-2xl">Edit Playlist :</p>
@@ -135,7 +135,7 @@
         </div>
     </section>
     {{-- modal delete library --}}
-    <section class="w-screen h-screen fixed justify-center items-center hidden" id="library-del">
+    <section class="w-screen h-screen fixed z-14 justify-center items-center hidden" id="library-del">
         <div class="bg-[#1e1e1e] p-4 border-[1px] rounded-[12px] w-2/12">
             <form action="/library/delete" method="post">
                 @csrf
@@ -149,7 +149,7 @@
         </div>
     </section>
     {{-- modal playlist delete --}}
-    <section class="w-screen h-screen fixed justify-center items-center hidden" id="playlist-del">
+    <section class="w-screen h-screen fixed z-15 justify-center items-center hidden" id="playlist-del">
         <div class="bg-[#1e1e1e] p-4 border-[1px] rounded-[12px] w-2/12">
             <form id="form-delete-playlist">
                 @csrf
@@ -163,9 +163,9 @@
         </div>
     </section>
     {{-- main playlist --}}
-    <section class="basis-3/4">
+    <section class="basis-3/4 min-w-9/12 fixed top-0 right-0 overflow-y-hidden">
         <div class="flex justify-between items-center mt-4 mx-2">
-            <h1 class="text-2xl font-bold p-2">All Libraries</h1>
+            <h1 class="text-2xl font-bold p-2" onclick="libraryList()">All Libraries</h1>
             @auth
                 <form action="/logout" method="post">
                     @csrf
@@ -187,10 +187,22 @@
             @endauth
         </div>
         {{-- libraries --}}
-        <div class="flex overflow-x-auto mt-4">
+        <div id="default-libraries" class="flex overflow-x-hidden mt-4 max-w-[90rem]">
             @foreach ($datalibrary as $library)
                 <div class="p-2 ml-4 bg-[#1e1e1e] w-36 h-42 flex flex-col border-[1px] rounded-[8px]"
-                    onclick="playList({{ $library->id }})">
+                    onclick="libraries({{ $library->id }})">
+                    <div class="w-30 h-20 bg-white m-auto rounded-[4px]"></div>
+                    <div class="">{{ $library->platform }}</div>
+                    <div class="">{{ $library->title }}</div>
+                </div>
+            @endforeach
+        </div>
+        <div class="flex m-2 text-2xl" id="result-library"></div>
+        {{-- all libraries --}}
+        <div id="all-libraries" class="hidden flex-wrap mt-4 max-w-[90rem]">
+            @foreach ($datalibrary as $library)
+                <div class="p-2 ml-4 mt-4 bg-[#1e1e1e] w-36 h-42 flex flex-col border-[1px] rounded-[8px]"
+                    onclick="libraries({{ $library->id }})">
                     <div class="w-30 h-20 bg-white m-auto rounded-[4px]"></div>
                     <div class="">{{ $library->platform }}</div>
                     <div class="">{{ $library->title }}</div>
@@ -198,7 +210,7 @@
             @endforeach
         </div>
         {{-- playlist --}}
-        <div class="mt-4 flex">
+        <div class="mt-4 flex" id="playlist-area">
             <div class="basis-3/4 px-4">
                 <h2 class="text-2xl">Playlist</h2>
                 {{--  --}}
@@ -228,10 +240,84 @@
         const btnUrl = document.querySelector('#url-btn');
         const libraryDel = document.querySelector('#library-del');
         const playlistDel = document.querySelector('#playlist-del');
-        //area const for any on play desk.
+        //area const for any on play area.
         const libraryTitle = document.querySelector('#library-title');
         const libraryDesc = document.querySelector('#library-description');
         const playlistTest = document.querySelector('#test');
+
+        // document.querySelector('#form-update-library').addEventListener('submit', function(e) {
+        //     e.preventDefault();
+        //     const update = e.target;
+        //     const updLibrary = new FormData(update);
+
+        //     fetch("{{ route('upd.library') }}", {
+        //         method: 'POST',
+        //         headers: {
+        //             'X-CSRF-TOKEN': updLibrary.get('_token'),
+        //             'Accept': 'application/json',
+        //         },
+        //         body:updLibrary
+        //     })
+        //     .then(response => response.json())
+        //     .then(data => {
+        //         libraries(data)
+        //     })
+        // });
+
+        // document.querySelector('#search-library').addEventListener('keyup', function() {
+        //     let query = this.value;
+        //     let librariesResult = document.querySelector('#result-library');
+        //     if (query.length > 1) {
+        //         fetch('/home/library/search?query=${query}')
+        //         .then(response => response.json())
+        //         .then(data => {
+        //             librariesResult.innerHTML = '';
+        //             if (data.length > 1) {
+        //                 data.forEach(item => {
+        //                     let div = document.createElement('div');
+        //                     div.textContent = item.title;
+        //                     librariesResult.appendChild(div);
+        //                 });
+        //             } else {
+        //                 librariesResult.textContent = "Libraries not found";
+        //             }
+        //         })
+        //     } else {
+        //         librariesResult.innerHTML = '';
+        //     }
+        // });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const librarySearch = document.querySelector('#search-library');
+            const libraryResult = document.querySelector('#result-library');
+            librarySearch.addEventListener('keyup', function() {
+                const query = this.value.trim();
+                if (query.length > 0) {
+                    fetch(`/home/library/search?query=${encodeURIComponent(query)}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log(data);
+                            let html = '';
+                            if (data.length > 0) {
+                                data.forEach(item => {
+
+                                    html += `<div>${item.title}</div>`;
+                                });
+                            } else {
+                                html = '<div>Library not found</div>';
+                            }
+                            libraryResult.innerHTML = html;
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            libraryResult.innerHTML = '<div>Something wrong, please wait!</div>';
+                        });
+                } else {
+                    libraryResult.innerHTML = '';
+                }
+            });
+        });
+
 
         document.querySelector('#form-update-playlist').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -239,17 +325,19 @@
             const updData = new FormData(upd);
 
             fetch("{{ route('upd.playlist') }}", {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': updData.get('_token'),
-                    'Accept': 'application/json',
-                },
-                body:updData
-            })
-            .then(response => response.json())
-            .then(data => {
-                playList(data.libraries_id)
-            })
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': updData.get('_token'),
+                        'Accept': 'application/json',
+                    },
+                    body: updData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+
+                    libraries(data.libraries_id)
+                })
         });
 
         document.querySelector('#form-delete-playlist').addEventListener('submit', function(e) {
@@ -258,17 +346,17 @@
             const delData = new FormData(del);
 
             fetch("{{ route('del.playlist') }}", {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': delData.get('_token'),
-                    'Accept': 'application/json',
-                },
-                body:delData
-            })
-            .then(response => response.json())
-            .then(data => {
-                playList(data.libraries_id)
-            })
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': delData.get('_token'),
+                        'Accept': 'application/json',
+                    },
+                    body: delData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    libraries(data.libraries_id)
+                })
         });
 
         document.querySelector('#form-add-playlist').addEventListener('submit', function(e) {
@@ -278,17 +366,17 @@
             const addData = new FormData(add);
 
             fetch("{{ route('add.playlist') }} ", {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': addData.get('_token'),
-                    'Accept': 'application/json',
-                },
-                body:addData
-            })
-            .then(response => response.json())
-            .then(data => {
-                playList(data.libraries_id)
-            })
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': addData.get('_token'),
+                        'Accept': 'application/json',
+                    },
+                    body: addData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    libraries(data.libraries_id)
+                })
         });
 
         function librariesDelete() {
@@ -303,25 +391,14 @@
             document.querySelector('#playlist-del input[name="playlist_id"]').value = (id);
 
             // example for tenary condition
-            playlistDel.style.display = !playlistDel.style.display ? 'flex' : (playlistDel.style.display === 'none' ? 'flex' : 'none')
-
-            // if (!playlistDel.style.display) {
-            //     playlistDel.style.display = "flex";
-            // } else {
-            //     if (playlistDel.style.display === "none") {
-            //         playlistDel.style.display = "flex";
-            //     } else {
-            //         playlistDel.style.display = "none";
-            //     }
-            // }
+            playlistDel.style.display = !playlistDel.style.display ? 'flex' : (playlistDel.style.display === 'none' ?
+                'flex' : 'none')
         }
 
         function modalUpdatePlay(id) {
             fetch('/playlist/find?id=' + id)
                 .then(response => response.json())
                 .then(alpha => {
-                    console.log(alpha);
-
                     document.querySelector('#modal-url-update input[name="playlist_id"]').value = (id);
                     document.querySelector('#modal-url-update input[name="songs"]').value = alpha.songs;
                     document.querySelector('#modal-url-update input[name="url_link"]').value = alpha.url_link;
@@ -357,10 +434,11 @@
             }
         }
 
-        function playList(id) {
+        function libraries(id) {
             fetch('/library/find?id=' + id)
                 .then(response => response.json())
                 .then(data => {
+                    // console.log(data );
                     btnUrl.style.display = "flex";
                     libraryTitle.textContent = data.title;
                     libraryDesc.textContent = data.description;
@@ -390,7 +468,7 @@
                         playlistTest.insertAdjacentHTML("beforeend", list);
                     });
                 });
-            }
+        }
 
         function closeModal() {
             modalLibrary.style.display = "none";
@@ -399,6 +477,19 @@
             modalUpdateUrl.style.display = "none";
             libraryDel.style.display = "none";
             playlistDel.style.display = "none";
+        }
+
+        const normalLibra = document.querySelector('#default-libraries');
+        const allLibra = document.querySelector('#all-libraries');
+
+        function libraryList() {
+            if (normalLibra.style.display === 'flex') {
+                normalLibra.style.display = 'none';
+                allLibra.style.display = 'flex';
+            } else {
+                normalLibra.style.display = 'flex';
+                allLibra.style.display = 'none';
+            }
         }
 
         function submitModal() {

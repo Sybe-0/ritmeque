@@ -22,7 +22,7 @@ class LobbyController extends Controller
 
     public function findLibrary(Request $request)
     {
-        $idLibrary = $request->id;
+        // $idLibrary = $request->id;
         // $library = DB::select('SELECT * from libraries where id = ? LIMIT 1', [$idLibrary]);
         // return response()->json($library[0]);
         $library = Library::findOrFail($request->id);
@@ -31,7 +31,7 @@ class LobbyController extends Controller
 
     public function findPlaylist(Request $request)
     {
-        $idPlaylist = $request->id;
+        // $idPlaylist = $request->id;
         // $dataplaylist = DB::select('SELECT * from playlist_songs where libraries_id = ?', [$idPlaylist]);
         // return response()->json($dataplaylist);
         $dataplaylist = Playlist::where('libraries_id', $request->id)->get();
@@ -40,7 +40,7 @@ class LobbyController extends Controller
 
     public function findPlaylistFetch(Request $request)
     {
-        $idFetch = $request->id;
+        // $idFetch = $request->id;
         // $fetch = DB::select('SELECT * from playlist_songs where id = ? LIMIT 1', [$idFetch]);
         // return response()->json($fetch[0]);
         $fetch = Playlist::where('id', $request->id)->first();
@@ -91,6 +91,9 @@ class LobbyController extends Controller
         $editLibrary->title = $request->title;
         $editLibrary->description = $request->description;
         $editLibrary->save();
+        return response()->json([
+            // 'libraries' => $editLibrary->users_id,
+        ]);
 
         // $title = $request->input('title');
         // $description = $request->input('description');
@@ -120,7 +123,7 @@ class LobbyController extends Controller
 
         $playlist = Playlist::create($playlistAdd);
         return response()->json([
-            'libraries_id' => $playlist->libraries_id,
+            'playlist' => $playlist->libraries_id,
         ]);
     }
 
@@ -150,7 +153,7 @@ class LobbyController extends Controller
         $request->validate([
             'libraries_id' => 'required',
         ]);
-        $idLibrary = $request->libraries_id;
+        // $idLibrary = $request->libraries_id;
         // DB::delete('DELETE from libraries where id = ?', [$idLibrary]);
         // dd($library);
 
@@ -170,8 +173,19 @@ class LobbyController extends Controller
         $idPlaylist = Playlist::find($request->playlist_id);
         $idPlaylist->delete();
         return response()->json([
-            'libraries_id' => $idPlaylist->libraries_id,
+            'playlist' => $idPlaylist->libraries_id,
         ]);
+    }
+
+    public function search(Request $request)
+    {
+        $query = $request->get('query');
+        if ($query) {
+            $search = Library::where('title', 'LIKE', "%$query%")->get();
+        } else {
+            $search = collect();
+        }
+        return response()->json($search);
     }
 
     // public function testGetId($id) {
