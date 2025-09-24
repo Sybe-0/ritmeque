@@ -17,6 +17,8 @@ return new class extends Migration
             $table->foreignId('users_id');
             $table->string('platform');
             $table->string('description');
+            $table->tinyInteger('is_favorite')->default(0);
+            $table->timestamp('viewed_at')->nullable();
             $table->timestamps();
 
             $table->foreign('users_id')->references('id')->on('users')->onDelete('cascade');

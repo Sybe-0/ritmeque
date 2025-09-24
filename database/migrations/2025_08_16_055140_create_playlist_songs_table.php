@@ -17,6 +17,8 @@ return new class extends Migration
             $table->foreignId('libraries_id');
             $table->string('url_link');
             $table->timestamps();
+
+            $table->foreign('libraries_id')->references('id')->on('libraries')->onDelete('cascade');
         });
     }
 

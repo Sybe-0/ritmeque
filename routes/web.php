@@ -19,6 +19,7 @@ Route::post('/signin', [LoginController::class, 'authenticate']);
 Route::get('/home', [LobbyController::class, 'index']);
 Route::post('/home/library', [LobbyController::class, 'createLibrary'])->middleware('auth');
 Route::post('/home/edit/library', [LobbyController::class, 'updateLibrary'])->name('upd.library');
+Route::post('library/favbtn/{$id}', [LobbyController::class, 'favBtn'])->name('favorite.btn');
 Route::post('/home/playlist', [LobbyController::class, 'createPlaylist'])->name('add.playlist');
 Route::post('/home/edit/playlist', [LobbyController::class, 'updatePlaylist'])->name('upd.playlist');
 Route::post('/logout', [LobbyController::class, 'logout'])->middleware('auth');
@@ -31,6 +32,7 @@ Route::get('/library/find', [LobbyController::class, 'findLibrary']);
 Route::get('/library/playlist/find', [LobbyController::class, 'findPlaylist']);
 Route::get('/playlist/find', [LobbyController::class, 'findPlaylistFetch']);
 Route::get('/home/library/search', [LobbyController::class, 'search'])->name('search.library');
+Route::get('library/recently', [LobbyController::class, 'recently'])->name('recently.button');
 
 Route::get('password/reset', [ResetController::class, 'index']);
 Route::post('password/email', [ResetController::class, 'sendResetLinkEmail'])->name('password.email');

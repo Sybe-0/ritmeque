@@ -8,6 +8,7 @@ use App\Models\Playlist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Carbon;
 
 class LobbyController extends Controller
 {
@@ -27,6 +28,42 @@ class LobbyController extends Controller
         // return response()->json($library[0]);
         $library = Library::findOrFail($request->id);
         return response()->json($library);
+    }
+
+    public function recently(Request $request)
+    {
+        Library::create([
+            'viewed_at' => Carbon::today()->toDateString()
+        ]);
+        return response()->json();
+    }
+
+    public function favBtn(Request $request)
+    {
+        $request->validate([
+            'libraries_id' => 'required'
+        ]);
+
+        $fav = $request->input('libraries_id');
+
+        $favBtn = Library::where('libraries_id', $fav)->first();
+
+        if (!$favBtn) {
+            $favBtn = Library::create([
+                'libraries_id' => $fav,
+                'is_favorite' => 1,
+            ]);
+            $newStatus = 1;
+        } else {
+            $newStatus = $favBtn->is_favorite == 0 ? 1 : 0;
+            $favBtn->update(['is_favorite' => $newStatus]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'is_favorite' => $newStatus,
+            'massage' => $newStatus == 1 ? 'Favorite!' : 'Unfavorite!'
+        ]);
     }
 
     public function findPlaylist(Request $request)
@@ -73,8 +110,6 @@ class LobbyController extends Controller
         // $platform = $request->input('platform');
         // $insert = DB::insert('INSERT into libraries (title, description, platform, users_id, create_at, update_at) values (?, ?, ?, ?, NOW(), NOW())', [$title, $description, $platform, $userId]);
 
-        // dd($insert);
-
         $libraryAdd['users_id']=$userId;
         Library::create($libraryAdd);
         return redirect('/home')->with('Succes', 'Library has created!');
@@ -92,7 +127,7 @@ class LobbyController extends Controller
         $editLibrary->description = $request->description;
         $editLibrary->save();
         return response()->json([
-            // 'libraries' => $editLibrary->users_id,
+            'libraries' => $editLibrary->users_id,
         ]);
 
         // $title = $request->input('title');
@@ -104,7 +139,6 @@ class LobbyController extends Controller
         // } else {
         //     return redirect('/')->with('error', 'Error to update the library');
         // }
-        // dd();
     }
 
     public function createPlaylist(Request $request)

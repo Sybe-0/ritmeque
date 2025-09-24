@@ -17,5 +17,13 @@ class Library extends Model
         'users_id',
         'description',
         'platform',
+        'is_favorite',
     ];
+
+    protected $casts = ['viewed_at' => 'datetime'];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
