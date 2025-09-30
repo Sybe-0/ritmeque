@@ -3,54 +3,75 @@ const btnUrl = document.querySelector("#url-btn");
 //area const for any on play area.
 const libraryTitle = document.querySelector("#library-title");
 const libraryDesc = document.querySelector("#library-description");
-const playlistTable = document.querySelector("#playlist-test");
+const favBtnId = document.querySelector("#form-fav-btn");
+const inputFav = document.querySelector(".input-fav");
+const playlistTable = document.querySelector("#playlist-table");
 
-function libraries(id) {
-    fetch("/library/find?id=" + id)
+const idGlobal = "";
+
+function libraries(idlibrary) {
+    const idGlobal = idlibrary;
+    fetch("/library/find?id=" + idlibrary)
         .then((response) => response.json())
         .then((data) => {
-            // console.log(data );
+            if (data.is_favorite === true) {
+                inputFav.checked = true;
+            } else {
+                inputFav.checked = false;
+            }
+
+            favBtnId.style.display = "flex";
             btnUrl.style.display = "flex";
             libraryTitle.textContent = data.title;
             libraryDesc.textContent = data.description;
             document.querySelector(
                 '#url-modal input[name="libraries_id"]'
-            ).value = id;
+            ).value = idGlobal;
             document.querySelector(
                 '#library-del input[name="libraries_id"]'
-            ).value = id;
+            ).value = idGlobal;
             document.querySelector(
                 '#library-edit-modal input[name="libraries_id"]'
-            ).value = id;
+            ).value = idGlobal;
             document.querySelector(
                 '#library-edit-modal input[name="title"]'
             ).value = data.title;
             document.querySelector(
                 '#library-edit-modal input[name="description"]'
             ).value = data.description;
-            document.querySelector(
-                '#form-fav-btn input[name="libraries_id"]'
-            ).value = id;
         });
 
-    fetch("/library/playlist/find?id=" + id)
+    fetch("/library/playlist/find?id=" + idGlobal)
         .then((response) => response.json())
         .then((list) => {
             playlistTable.innerHTML = "";
             list.forEach((play) => {
                 let list = `<div class="flex justify-between items-center w-full border-b-[1px] mt-2">
                                 <div class="flex">
-                                    <img class="mr-10" src="{{ asset('assets/img/icon_menu_stripes.svg') }}">
+                                    <p></p>
                                     <div class="text-xl">${play.songs}</div>
-                                </div>
+                                    </div>
                                 <div class="flex">
                                     <button class="mr-2 px-2" onclick="modalUpdatePlay(${play.id})">Edit</button>
                                     <button class="ml-2 px-2 bg-custom-pink rounded-[4px]" onclick="modalDelPlay(${play.id})">Hapus</button>
-                                </div>
+                                    </div>
                             </div>`;
                 playlistTable.insertAdjacentHTML("beforeend", list);
             });
         });
+    console.log(idGlobal);
+    inputFav.addEventListener("change", async function () {
+        fetch("/library/favbtn?id=" + idGlobal, {
+            method: "GET",
+            headers: {
+                Accept: "application/json",
+            },
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                libraries(data);
+            });
+    });
 }
 
 document
@@ -60,7 +81,7 @@ document
         const update = e.target;
         const updLibrary = new FormData(update);
 
-        fetch("{{ route('upd.library') }}", {
+        fetch("/home/edit/library", {
             method: "POST",
             headers: {
                 "X-CSRF-TOKEN": updLibrary.get("_token"),
@@ -83,7 +104,6 @@ document.addEventListener("DOMContentLoaded", function () {
             fetch(`/home/library/search?query=${encodeURIComponent(query)}`)
                 .then((response) => response.json())
                 .then((data) => {
-                    console.log(data);
                     let html = "";
                     if (data.length > 0) {
                         data.forEach((item) => {
@@ -112,7 +132,7 @@ document
         const upd = e.target;
         const updData = new FormData(upd);
 
-        fetch("{{ route('upd.playlist') }}", {
+        fetch("/home/edit/playlist", {
             method: "POST",
             headers: {
                 "X-CSRF-TOKEN": updData.get("_token"),
@@ -122,8 +142,6 @@ document
         })
             .then((response) => response.json())
             .then((data) => {
-                console.log(data);
-
                 libraries(data.libraries_id);
             });
     });
@@ -135,7 +153,7 @@ document
         const del = e.target;
         const delData = new FormData(del);
 
-        fetch("{{ route('del.playlist') }}", {
+        fetch("/playlist/delete", {
             method: "POST",
             headers: {
                 "X-CSRF-TOKEN": delData.get("_token"),
@@ -157,7 +175,7 @@ document
         const add = e.target;
         const addData = new FormData(add);
 
-        fetch("{{ route('add.playlist') }} ", {
+        fetch("/home/playlist", {
             method: "POST",
             headers: {
                 "X-CSRF-TOKEN": addData.get("_token"),
@@ -191,25 +209,3 @@ function modalUpdatePlay(id) {
         modalUpdateUrl.style.display = "none";
     }
 }
-
-
-document.querySelector("#fav-btn").addEventListener("click", function (e) {
-    e.preventDefault();
-    const favbtn = document.querySelector("#form-fav-btn");
-    const favBtnData = new FormData(favbtn);
-
-    fetch("{{route('favorite.btn')}}", {
-        method: "POST",
-        body: favBtnData,
-        headers: {
-            "X-CSRF-TOKEN": favBtnData.get("_token"),
-            Accept: "application/json",
-        },
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            document.querySelector('#response-massage').textContent = data.status;
-        }
-    })
-});

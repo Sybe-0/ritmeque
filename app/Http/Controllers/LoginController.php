@@ -4,13 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class LoginController extends Controller
 {
-    public function index()
+    public function signin()
     {
         return view('login');
     }
@@ -22,39 +22,35 @@ class LoginController extends Controller
             'password' => 'required'
         ]);
 
-        $username = $request->input('username');
-        $password = $request->input('password');
-        $remember = $request->has('remember');
-
-        $user = DB::select('SELECT * from users where username = ?', [$username]);
-
-        if ($user) {
-            $user = $user[0];
-
-            if (password_verify($password, $user->password)) {
-                if (Auth::attempt($credentials, $remember)) {
-                    // $rememberToken = Str::random(60);
-                    // DB::update('UPDATE users SET remember_token = ? WHERE id = ?', [$rememberToken, $user->id]);
-                    // Cookie::queue('remember_token', $rememberToken, 4320);
-                    $request->session(['users_id' => $user->id])->regenerate();
-                    return redirect()->intended('/');
-                }
-                // return response()->json(['massage' => 'Login berhasil', 'user' => $user]);
-            } else {
-                return response()->json(['massage' => 'Password tidak ditemukan'], 401);
-            }
-        } else {
-            return response()->json(['massage' => 'User tidak ditemukan'], 404);
-        }
-
-
+        // $username = $request->input('username');
+        // $password = $request->input('password');
         // $remember = $request->has('remember');
-        // if (Auth::attempt($credentials, $remember)) {
-        //     $request->session()->regenerate();
-        //     return redirect()->intended('/');
+
+        // $user = DB::select('SELECT * from users where username = ?', [$username]);
+
+        // if ($user) {
+        //     $user = $user[0];
+
+        //     if (password_verify($password, $user->password)) {
+        //         if (Auth::attempt($credentials, $remember)) {
+        //             $request->session(['users_id' => $user->id])->regenerate();
+        //             return redirect()->intended('/');
+        //         }
+        //         // return response()->json(['massage' => 'Login berhasil', 'user' => $user]);
+        //     } else {
+        //         return response()->json(['massage' => 'Password tidak ditemukan'], 401);
+        //     }
+        // } else {
+        //     return response()->json(['massage' => 'User tidak ditemukan'], 404);
         // }
-        // return redirect()->back()->withErrors([
-        //     'email' => 'Email salah!',
-        // ]);
+
+        $remember = $request->has('remember');
+        if (Auth::attempt($credentials, $remember)) {
+            $request->session()->regenerate();
+            return redirect()->intended('/');
+        }
+        return redirect()->back()->withErrors([
+            'email' => 'Email salah!',
+        ]);
     }
 }

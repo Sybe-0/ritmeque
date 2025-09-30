@@ -2,65 +2,84 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Models\Playlist;
-use App\Http\Requests\StorePlaylistRequest;
-use App\Http\Requests\UpdatePlaylistRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class PlaylistController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function findPlaylist(Request $request)
     {
-        //
+        // $idPlaylist = $request->id;
+        // $dataplaylist = DB::select('SELECT * from playlist_songs where libraries_id = ?', [$idPlaylist]);
+        // return response()->json($dataplaylist);
+        $dataplaylist = Playlist::where('libraries_id', $request->id)->get();
+        return response()->json($dataplaylist);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function findPlaylistFetch(Request $request)
     {
-        //
+        // $idFetch = $request->id;
+        // $fetch = DB::select('SELECT * from playlist_songs where id = ? LIMIT 1', [$idFetch]);
+        // return response()->json($fetch[0]);
+        $fetch = Playlist::where('id', $request->id)->first();
+        return response()->json($fetch);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StorePlaylistRequest $request)
+    public function createPlaylist(Request $request)
     {
-        //
+        $playlistAdd = $request->validate([
+            'songs' => 'required|string',
+            'url_link' => 'required|string|url',
+            'libraries_id' => 'required',
+        ]);
+        // $songs = $request->input('songs');
+        // $link = $request->input('url_link');
+        // $libraries = $request->input('libraries_id');
+        // $result = DB::insert('INSERT into playlist_songs (songs, url_link, libraries_id, create_at, update_at) values (?, ?, ?, NOW(), NOW())', [$songs, $link, $libraries]);
+
+        // dd($result);
+
+        $playlist = Playlist::create($playlistAdd);
+        return response()->json([
+            'playlist' => $playlist->libraries_id,
+        ]);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Playlist $playlist)
+    public function updatePlaylist(Request $request)
     {
-        //
+        $request->validate([
+            'songs' => 'required',
+            'url_link' => 'required',
+            'playlist_id' => 'required',
+        ]);
+        // $songs = $request->input('songs');
+        // $link = $request->input('url_link');
+        // $idPlaylist = $request->playlist_id;
+        // DB::update('UPDATE playlist_songs set songs = ?, url_link = ? where id = ?', [$songs, $link, $idPlaylist]);
+
+        $playlist = Playlist::find($request->playlist_id);
+        $playlist->songs = $request->songs;
+        $playlist->url_link = $request->url_link;
+        $playlist->save();
+        return response()->json([
+            'libraries_id' => $playlist->libraries_id,
+        ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Playlist $playlist)
+    public function destroyPlaylist(Request $request)
     {
-        //
-    }
+        $request->validate([
+            'playlist_id' => 'required',
+        ]);
+        // $idPlaylist = $request->playlist_id;
+        // DB::delete('DELETE from playlist_songs where id = ?', [$idPlaylist]);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdatePlaylistRequest $request, Playlist $playlist)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Playlist $playlist)
-    {
-        //
+        $idPlaylist = Playlist::find($request->playlist_id);
+        $idPlaylist->delete();
+        return response()->json([
+            'playlist' => $idPlaylist->libraries_id,
+        ]);
     }
 }

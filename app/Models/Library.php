@@ -20,7 +20,10 @@ class Library extends Model
         'is_favorite',
     ];
 
-    protected $casts = ['viewed_at' => 'datetime'];
+    protected $casts = [
+        'viewed_at' => 'datetime',
+        'is_favorite' => 'boolean'
+    ];
 
     public function user()
     {

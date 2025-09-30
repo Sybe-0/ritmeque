@@ -27,7 +27,7 @@
         </div>
         </div>
         <div class="flex items-center p-2">
-            <p class="text-xl ml-2" onclick="libraryList()">All Libraries</p>
+            <p class="text-xl ml-2">All Libraries</p>
         </div>
         <div class="flex items-center p-2">
             <p class="text-xl ml-2">Favorit</p>
@@ -165,9 +165,9 @@
     {{-- main playlist --}}
     <section class="basis-3/4 min-w-9/12 fixed top-0 right-0 overflow-y-hidden">
         <div class="flex justify-between items-center mt-4 mx-2">
-            <h1 class="text-2xl font-bold p-2" onclick="libraryList()">All Libraries</h1>
+            <h1 class="text-2xl font-bold p-2">All Libraries</h1>
             @auth
-                <form action="/logout" method="post">
+                <form action="{{ route('logout.btn') }}" method="post">
                     @csrf
                     <button type="submit" class="p-2 px-6 border-[1px] border-white rounded-[4px]">Logout</button>
                 </form>
@@ -186,7 +186,7 @@
                 </div>
             @endauth
         </div>
-        {{-- libraries --}}
+        {{-- all-libraries --}}
         <div id="default-libraries" class="flex overflow-x-hidden mt-4 max-w-[90rem]">
             @foreach ($datalibrary as $library)
                 <div class="p-2 ml-4 bg-[#1e1e1e] w-36 h-42 flex flex-col border-[1px] rounded-[8px]"
@@ -197,19 +197,8 @@
                 </div>
             @endforeach
         </div>
-        <div class="flex m-2 text-2xl" id="result-library"></div>
-        {{-- all libraries --}}
-        <div id="all-libraries" class="hidden flex-wrap mt-4 max-w-[80rem]">
-            @foreach ($datalibrary as $library)
-                <form id="form-library-recently" class="p-2 ml-4 mt-4 bg-[#1e1e1e] w-36 h-42 flex flex-col border-[1px] rounded-[8px]"
-                    onclick="libraries({{ $library->id }})">
-                    @csrf
-                    <div class="w-30 h-20 bg-white m-auto rounded-[4px]"></div>
-                    <div class="">{{ $library->platform }}</div>
-                    <div class="">{{ $library->title }}</div>
-                </form>
-            @endforeach
-        </div>
+        {{-- result search library --}}
+        <div id="result-library"></div>
         {{-- recently view --}}
         {{-- playlist --}}
         <div class="mt-4 flex" id="playlist-area">
@@ -221,13 +210,14 @@
             <div class="basis-1/4 min-h-80 h-full border-[1px] px-6" id="show-border">
                 <div class="text-2xl" id="library-title"></div>
                 <div class="" id="library-description"></div>
+                <form id="form-fav-btn" class="hidden">
+                    @csrf
+                    {{-- <div id="fav-btn"></div> --}}
+                    <p class="mr-2">Favorite</p>
+                    <input type="checkbox" name="is_favorite" class="input-fav">
+                </form>
                 <div class="hidden items-center" id="url-btn">
                     <img src="{{ asset('assets/img/icon_plus_add.svg') }}" class="w-12" onclick="urlInput()">
-                    <form id="form-fav-btn">
-                        @csrf
-                        <input type="hidden" name="libraries_id">
-                        <img src="{{ asset('assets/img/icon_love.svg') }}" class="w-12" id="fav-btn">
-                    </form>
                     <img src="{{ asset('assets/img/icon_trash.svg') }}" class="ml-2 w-10"
                         onclick="librariesDelete()">
                     <img src="{{ asset('assets/img/icon_edit.svg') }}" class="ml-2 w-10" onclick="editModal()">

@@ -58,19 +58,6 @@ function closeModal() {
     playlistDel.style.display = "none";
 }
 
-const normalLibra = document.querySelector("#default-libraries");
-const allLibra = document.querySelector("#all-libraries");
-
-function libraryList() {
-    if (normalLibra.style.display === "flex") {
-        normalLibra.style.display = "none";
-        allLibra.style.display = "flex";
-    } else {
-        normalLibra.style.display = "flex";
-        allLibra.style.display = "none";
-    }
-}
-
 function submitModal() {
     closeModal();
 }
