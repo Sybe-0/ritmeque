@@ -12,7 +12,7 @@ class LoginController extends Controller
 {
     public function signin()
     {
-        return view('login');
+        return view('auth.login');
     }
 
     public function authenticate(Request $request)

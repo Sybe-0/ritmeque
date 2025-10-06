@@ -16,7 +16,7 @@ class LibrariesController extends Controller
         // $datalibrary = DB::select('SELECT * FROM libraries WHERE users_id = ?', [$userId]);
         $userId = Auth::id();
         $datalibrary = Library::where('users_id', $userId)->get();
-        return view('redirect.lobby', compact('datalibrary'));
+        return view('home.all_libraries', compact('datalibrary'));
         // dd($datalibrary, collect($data)->toArray());
     }
 
@@ -38,9 +38,7 @@ class LibrariesController extends Controller
         $fav = Library::find($request->id);
         $fav->is_favorite = $fav->is_favorite == 0 ? 1 : 0;
         $fav->save();
-        return response()->json([
-            'favorite' => $fav->all()
-        ]);
+        return response()->json();
     }
 
     public function createLibrary(Request $request)
@@ -60,7 +58,7 @@ class LibrariesController extends Controller
 
         $libraryAdd['users_id']=$userId;
         Library::create($libraryAdd);
-        return redirect('/home')->with('Succes', 'Library has created!');
+        return redirect('/')->with('Succes', 'Library has created!');
     }
 
     public function updateLibrary(Request $request)
@@ -100,7 +98,7 @@ class LibrariesController extends Controller
 
         $idLibrary = Library::find($request->libraries_id);
         $idLibrary->delete();
-        return redirect('/home');
+        return redirect('/');
     }
 
     public function search(Request $request)

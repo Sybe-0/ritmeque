@@ -1,9 +1,8 @@
 const modalUpdateUrl = document.querySelector("#modal-url-update");
-const btnUrl = document.querySelector("#url-btn");
 //area const for any on play area.
+const showArea = document.querySelector('#show-desc-area');
 const libraryTitle = document.querySelector("#library-title");
 const libraryDesc = document.querySelector("#library-description");
-const favBtnId = document.querySelector("#form-fav-btn");
 const inputFav = document.querySelector(".input-fav");
 const playlistTable = document.querySelector("#playlist-table");
 
@@ -20,8 +19,7 @@ function libraries(idlibrary) {
                 inputFav.checked = false;
             }
 
-            favBtnId.style.display = "flex";
-            btnUrl.style.display = "flex";
+            showArea.style.display = "flex";
             libraryTitle.textContent = data.title;
             libraryDesc.textContent = data.description;
             document.querySelector(
@@ -59,7 +57,6 @@ function libraries(idlibrary) {
                 playlistTable.insertAdjacentHTML("beforeend", list);
             });
         });
-    console.log(idGlobal);
     inputFav.addEventListener("change", async function () {
         fetch("/library/favbtn?id=" + idGlobal, {
             method: "GET",

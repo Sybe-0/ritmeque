@@ -33,7 +33,7 @@ function urlInput() {
     }
 }
 
-function popModal() {
+function modalAddLibrary() {
     if (modalLibrary.style.display === "none") {
         modalLibrary.style.display = "flex";
     } else {

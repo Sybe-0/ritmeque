@@ -5,41 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>RitmeQue Home</title>
     @vite('resources/css/app.css')
 </head>
 
-<body class="bg-custom-darkblue flex box-border h-screen max-h-screen">
-    <section class="bg-custom-pink basis-1/4 min-w-3/12 h-screen fixed top-0 left-0">
-        <div class="flex items-center p-2 mt-1.5">
-            <img src="{{ asset('assets/img/icon_not.svg') }}" class="mr-2">
-            <h1 class="font-semibold text-2xl">Your Library</h1>
-        </div>
-        <div class="bg-white w-full h-0.5 mb-1"></div>
-        <div class="flex items-center p-2">
-            <input class="flex items-center p-2 rounded-[8px] text-xl w-full bg-pink-700" name="query"
-                placeholder="Search Library" id="search-library"></input>
-        </div>
-        <div class="flex items-center p-2">
-            <button onclick="popModal()" class="flex items-center p-2 rounded-[8px] text-xl w-full bg-pink-900 focus:outline-none">
-                <img src="{{ asset('assets/img/icon_plus_only.svg') }}" class="mr-2">New Library
-            </button>
-        </div>
-        </div>
-        <div class="flex items-center p-2">
-            <p class="text-xl ml-2">All Libraries</p>
-        </div>
-        <div class="flex items-center p-2">
-            <p class="text-xl ml-2">Favorit</p>
-        </div>
-        <div class="flex items-center p-2">
-            <p class="text-xl ml-2">Recently View</p>
-        </div>
-        <div class="flex items-center p-2">
-            <p class="text-xl ml-2">About</p>
-        </div>
-    </section>
-
+<body class="bg-custom-darkblue">
     {{-- !modal add library! --}}
     <section class="w-screen h-screen fixed z-10 justify-center items-center hidden" id="library-modal">
         <div class="bg-[#1e1e1e] p-4 border-[1px] rounded-[12px] w-4/12">
@@ -50,9 +19,8 @@
             <form action="/home/library" method="post" class="mt-4">
                 @csrf
                 <div class="flex items-center mb-4">
-                    <p class="">URL Platform</p>
-                    <p class="ml-2">:</p>
-                    <select class="ml-2" name="platform">
+                    <p class="">URL Platform :</p>
+                    <select class="ml-2" name="platform" class="">
                         <option value="YouTube" class="bg-custom-pink">YouTube</option>
                         <option value="Spotify" class="bg-custom-pink">Spotify</option>
                     </select>
@@ -162,72 +130,85 @@
             </form>
         </div>
     </section>
-    {{-- main playlist --}}
-    <section class="basis-3/4 min-w-9/12 fixed top-0 right-0 overflow-y-hidden">
-        <div class="flex justify-between items-center mt-4 mx-2">
-            <h1 class="text-2xl font-bold p-2">All Libraries</h1>
-            @auth
-                <form action="{{ route('logout.btn') }}" method="post">
-                    @csrf
-                    <button type="submit" class="p-2 px-6 border-[1px] border-white rounded-[4px]">Logout</button>
-                </form>
-            @else
-                <div class="flex items-center">
-                    <a href="{{ url('/signup') }}" class="mr-6">
-                        <div class="p-2 px-6 bg-custom-pink rounded-[4px]">
-                            <h3 class="text-xl">Register</h3>
-                        </div>
-                    </a>
-                    <a href="{{ url('/signin') }}" class="mr-2">
-                        <div class="p-2 px-6 border-[1px] border-white rounded-[4px]">
-                            <h3 class="text-xl">Login</h3>
-                        </div>
-                    </a>
-                </div>
-            @endauth
-        </div>
-        {{-- all-libraries --}}
-        <div id="default-libraries" class="flex overflow-x-hidden mt-4 max-w-[90rem]">
-            @foreach ($datalibrary as $library)
-                <div class="p-2 ml-4 bg-[#1e1e1e] w-36 h-42 flex flex-col border-[1px] rounded-[8px]"
-                    onclick="libraries({{ $library->id }})">
-                    <div class="w-30 h-20 bg-white m-auto rounded-[4px]"></div>
-                    <div class="">{{ $library->platform }}</div>
-                    <div class="">{{ $library->title }}</div>
-                </div>
-            @endforeach
-        </div>
-        {{-- result search library --}}
-        <div id="result-library"></div>
-        {{-- recently view --}}
-        {{-- playlist --}}
-        <div class="mt-4 flex" id="playlist-area">
-            <div class="basis-3/4 px-4">
-                <h2 class="text-2xl">Playlist</h2>
-                {{--  --}}
-                <ul class="" id="playlist-table"></ul>
+
+    <div class="flex h-screen w-screen text-xl ">
+        {{-- navbar --}}
+        <nav class="bg-custom-pink px-2 h-full max-w2/5 basis-1/5">
+            <div class="flex items-center p-2 mt-1.5">
+                <img src="{{ asset('assets/img/icon_not.svg') }}" class="mr-2">
+                <h1 class="font-semibold text-2xl">Your Library</h1>
             </div>
-            <div class="basis-1/4 min-h-80 h-full border-[1px] px-6" id="show-border">
-                <div class="text-2xl" id="library-title"></div>
-                <div class="" id="library-description"></div>
-                <form id="form-fav-btn" class="hidden">
-                    @csrf
-                    {{-- <div id="fav-btn"></div> --}}
-                    <p class="mr-2">Favorite</p>
-                    <input type="checkbox" name="is_favorite" class="input-fav">
-                </form>
-                <div class="hidden items-center" id="url-btn">
-                    <img src="{{ asset('assets/img/icon_plus_add.svg') }}" class="w-12" onclick="urlInput()">
-                    <img src="{{ asset('assets/img/icon_trash.svg') }}" class="ml-2 w-10"
-                        onclick="librariesDelete()">
-                    <img src="{{ asset('assets/img/icon_edit.svg') }}" class="ml-2 w-10" onclick="editModal()">
-                    <img src="{{ asset('assets/img/icon_play.svg') }}" class="ml-2 w-10">
+            <div class="bg-white w-full h-0.5 mb-1"></div>
+            <input type="search" name="query" id="search-library"
+                class="bg-pink-700 w-full mt-4 p-2 rounded-[4px] focus:outline-none" placeholder="Search library">
+            <button class="bg-pink-900 mt-2 mb-2 p-2 w-full flex items-center cursor-pointer rounded-[4px]"
+                onclick="modalAddLibrary()">
+                <img src="{{ asset('assets/img/icon_plus_only.svg') }}" class="mr-2">
+                <p class="text-xl">New Library</p>
+            </button>
+            <p class="p-2 cursor-pointer border-pink-400 border-b-[1px]">All Libraries</p>
+            <p class="p-2 cursor-pointer">Favorite</p>
+            <p class="p-2 cursor-pointer">Recently Viewed</p>
+            <p class="p-2 cursor-pointer">About</p>
+        </nav>
+        {{-- main dashboard --}}
+        <main id="main-dashboard" class="h-full flex-1 mt-4 ml-4 mr-4 overflow-hidden">
+            <div class="flex justify-between">
+                <h1 class="text-2xl">All Libraries</h1>
+                <div class="">
+                    @auth
+                        <form action="{{ route('logout.btn') }}" method="post">
+                            @csrf
+                            <button type="submt"
+                                class="p-2 px-6 border-white border-[1px] rounded-[4px]">Logout</button>
+                        </form>
+                    @else
+                        <button class="bg-custom-pink mr-4 p-2 px-6 rounded-[4px]">
+                            <a href="{{ url('/signup') }}">Login</a>
+                        </button>
+                        <button class="p-2 px-6 border-white border-[1px] rounded-[4px]">
+                            <a href="{{ url('/signin') }}">Register</a>
+                        </button>
+                    @endauth
                 </div>
-                <div id="response-massage"></div>
             </div>
-        </div>
-        {{-- <a target="blank" href="{{ route('test-library', '3') }}">Test</a> --}}
-    </section>
+
+            {{-- libraries area --}}
+            <div class="flex mt-2">
+                @foreach ($datalibrary as $library)
+                    <div class="bg-[#1e1e1e] mr-2 p-2 w-38 h-42 border-[1px] rounded-[8px]"
+                        onclick="libraries({{ $library->id }})">
+                        <div class="">{{ $library->title }}</div>
+                        <div class="">URL: {{ $library->platform }}</div>
+                    </div>
+                @endforeach
+            </div>
+            {{--  --}}
+            <div class="flex mt-4" id="playlist-area">
+                {{-- playlist --}}
+                <div class="basis-3/4 mr-4 h-full overflow-y-auto">
+                    <ul id="playlist-table" class=""></ul>
+                </div>
+                {{-- desc library area --}}
+                <div class="flex-col flex-1 h-full border-[1px] rounded-[4px] hidden" id="show-desc-area">
+                    <div class="flex justify-between items-center">
+                        <p>Name :</p>
+                        <div id="library-title"></div>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <p>Desc :</p>
+                        <div id="library-description"></div>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <p>Favorite :</p>
+                        <input type="checkbox" name="is_favorite" class="input-fav">
+                    </div>
+                </div>
+            </div>
+
+            <div id="result-library"></div>
+        </main>
+    </div>
 
     <script src="{{ asset('assets/js/lobby_btn.js') }}"></script>
     <script src="{{ asset('assets/js/lobby_fetch.js') }}"></script>
