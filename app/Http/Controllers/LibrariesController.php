@@ -38,7 +38,7 @@ class LibrariesController extends Controller
         $fav = Library::find($request->id);
         $fav->is_favorite = $fav->is_favorite == 0 ? 1 : 0;
         $fav->save();
-        return response()->json();
+        return response()->json($fav);
     }
 
     public function createLibrary(Request $request)

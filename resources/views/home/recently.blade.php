@@ -111,6 +111,9 @@
             <div id="result-library"></div>
         </main>
     </div>
+
+    <script src="{{ asset('assets/js/lobby_btn.js') }}"></script>
+    <script src="{{ asset('assets/js/lobby_fetch.js') }}"></script>
 </body>
 
 </html>

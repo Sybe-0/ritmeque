@@ -42,9 +42,7 @@ class PlaylistController extends Controller
         // dd($result);
 
         $playlist = Playlist::create($playlistAdd);
-        return response()->json([
-            'playlist' => $playlist->libraries_id,
-        ]);
+        return response()->json($playlist);
     }
 
     public function updatePlaylist(Request $request)
@@ -63,9 +61,7 @@ class PlaylistController extends Controller
         $playlist->songs = $request->songs;
         $playlist->url_link = $request->url_link;
         $playlist->save();
-        return response()->json([
-            'libraries_id' => $playlist->libraries_id,
-        ]);
+        return response()->json($playlist);
     }
 
     public function destroyPlaylist(Request $request)
@@ -78,8 +74,6 @@ class PlaylistController extends Controller
 
         $idPlaylist = Playlist::find($request->playlist_id);
         $idPlaylist->delete();
-        return response()->json([
-            'playlist' => $idPlaylist->libraries_id,
-        ]);
+        return response()->json($idPlaylist);
     }
 }

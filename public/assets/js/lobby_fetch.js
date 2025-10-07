@@ -1,15 +1,15 @@
 const modalUpdateUrl = document.querySelector("#modal-url-update");
 //area const for any on play area.
-const showArea = document.querySelector('#show-desc-area');
+const showArea = document.querySelector("#show-desc-area");
 const libraryTitle = document.querySelector("#library-title");
 const libraryDesc = document.querySelector("#library-description");
 const inputFav = document.querySelector(".input-fav");
 const playlistTable = document.querySelector("#playlist-table");
 
-const idGlobal = "";
+let idGlobal = "";
 
 function libraries(idlibrary) {
-    const idGlobal = idlibrary;
+    idGlobal = idlibrary;
     fetch("/library/find?id=" + idlibrary)
         .then((response) => response.json())
         .then((data) => {
@@ -21,7 +21,8 @@ function libraries(idlibrary) {
 
             showArea.style.display = "flex";
 
-            document.querySelector('#library-platform').textContent = data.platform;
+            document.querySelector("#library-platform").textContent =
+                data.platform;
             libraryTitle.textContent = data.title;
             libraryDesc.textContent = data.description;
 
@@ -60,20 +61,20 @@ function libraries(idlibrary) {
                 playlistTable.insertAdjacentHTML("beforeend", list);
             });
         });
-    inputFav.addEventListener("change", async function () {
-        fetch("/library/favbtn?id=" + idGlobal, {
-            method: "GET",
-            headers: {
-                Accept: "application/json",
-            },
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                libraries(data);
-            });
-    });
 }
 
+inputFav.addEventListener("change", async function () {
+    fetch("/library/favbtn?id=" + idGlobal, {
+        method: "GET",
+        headers: {
+            Accept: "application/json",
+        },
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            libraries(data. id);
+        });
+});
 document
     .querySelector("#form-update-library")
     .addEventListener("submit", function (e) {
@@ -163,7 +164,7 @@ document
         })
             .then((response) => response.json())
             .then((data) => {
-                libraries(data.libraries_id);
+                libraries(data.id);
             });
     });
 
