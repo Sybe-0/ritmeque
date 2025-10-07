@@ -146,10 +146,10 @@
                 <img src="{{ asset('assets/img/icon_plus_only.svg') }}" class="mr-2">
                 <p class="text-xl">New Library</p>
             </button>
-            <p class="p-2 cursor-pointer border-pink-400 border-b-[1px]">All Libraries</p>
-            <p class="p-2 cursor-pointer">Favorite</p>
-            <p class="p-2 cursor-pointer">Recently Viewed</p>
-            <p class="p-2 cursor-pointer">About</p>
+            <p class="p-2 cursor-pointer border-pink-400 border-b-[1px]"><a href="/home">All Libraries</a></p>
+            <p class="p-2 cursor-pointer"><a href="/home/favorite">Favorite</a></p>
+            <p class="p-2 cursor-pointer"><a href="/home/recently">Recently Viewed</a></p>
+            <p class="p-2 cursor-pointer"><a href="">About</a></p>
         </nav>
         {{-- main dashboard --}}
         <main id="main-dashboard" class="h-full flex-1 mt-4 ml-4 mr-4 overflow-hidden">
@@ -164,10 +164,10 @@
                         </form>
                     @else
                         <button class="bg-custom-pink mr-4 p-2 px-6 rounded-[4px]">
-                            <a href="{{ url('/signup') }}">Login</a>
+                            <a href="{{ url('/signin') }}">Login</a>
                         </button>
                         <button class="p-2 px-6 border-white border-[1px] rounded-[4px]">
-                            <a href="{{ url('/signin') }}">Register</a>
+                            <a href="{{ url('/signup') }}">Register</a>
                         </button>
                     @endauth
                 </div>
@@ -190,21 +190,47 @@
                     <ul id="playlist-table" class=""></ul>
                 </div>
                 {{-- desc library area --}}
-                <div class="flex-col flex-1 h-full border-[1px] rounded-[4px] hidden" id="show-desc-area">
-                    <div class="flex justify-between items-center">
-                        <p>Name :</p>
-                        <div id="library-title"></div>
+                <div class="bg-[#1b1e33] p-2 flex-col flex-1 h-full border-[1px] rounded-[6px] hidden" id="show-desc-area">
+                    <div class="flex items-center justify-between">
+                        <p class="">Play Libraries :</p>
+                        <img src="{{ asset('assets/img/icon_play.svg') }}" class="cursor-pointer">
                     </div>
-                    <div class="flex justify-between items-center">
-                        <p>Desc :</p>
-                        <div id="library-description"></div>
+                    <div class="mt-2 flex items-center justify-between">
+                        <div class="flex">
+                            <div id="library-platform"></div>
+                            <p class="ml-2" id="library-platform"> Libraries :</p>
+                        </div>
+                        <img src="{{ asset('assets/img/icon_edit.svg') }}" class="cursor-pointer" onclick="editModal()">
                     </div>
-                    <div class="flex justify-between items-center">
-                        <p>Favorite :</p>
-                        <input type="checkbox" name="is_favorite" class="input-fav">
+                    <div class="m-2 ">
+                        <div class="flex justify-between items-center">
+                            <p>Name =</p>
+                            <div id="library-title"></div>
+                        </div>
+                        <div class="mt-2 max-h-42">
+                            <p>Desc =</p>
+                            <div id="library-description"></div>
+                        </div>
+                        <div class="mt-2 flex justify-between items-center">
+                            <p>Favorite =</p>
+                            <input type="checkbox" name="is_favorite" class="input-fav">
+                        </div>
                     </div>
+                    <div class="flex items-center justify-between">
+                        <p>Delete Libraries :</p>
+                        <img src="{{ asset('assets/img/icon_trash.svg') }}" class="mt-2 cursor-pointer" onclick="librariesDelete()">
+                    </div>
+                    <button class="bg-custom-pink p-2 mt-4 w-full self-end flex items-center cursor-pointer rounded-[2px]" onclick="urlInput()">
+                        <img src="{{ asset('assets/img/icon_plus_only.svg') }}">
+                        <p>Add PLaylist</p>
+                    </button>
                 </div>
             </div>
+
+            {{-- <img src="{{ asset('assets/img/icon_plus_add.svg') }}" class="w-12" onclick="urlInput()">
+            <img src="{{ asset('assets/img/icon_trash.svg') }}" class="ml-2 w-10" onclick="librariesDelete()">
+            <img src="{{ asset('assets/img/icon_edit.svg') }}" class="ml-2 w-10" onclick="editModal()">
+            <img src="{{ asset('assets/img/icon_play.svg') }}" class="ml-2 w-10"> --}}
 
             <div id="result-library"></div>
         </main>

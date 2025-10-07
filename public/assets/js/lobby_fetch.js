@@ -20,8 +20,11 @@ function libraries(idlibrary) {
             }
 
             showArea.style.display = "flex";
+
+            document.querySelector('#library-platform').textContent = data.platform;
             libraryTitle.textContent = data.title;
             libraryDesc.textContent = data.description;
+
             document.querySelector(
                 '#url-modal input[name="libraries_id"]'
             ).value = idGlobal;

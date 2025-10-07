@@ -5,7 +5,9 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ResetController;
 use App\Http\Controllers\LogoutController;
+use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\PlaylistController;
+use App\Http\Controllers\RecentlyController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\LibrariesController;
 
@@ -16,6 +18,8 @@ Route::post('/signin', [LoginController::class, 'authenticate']);
 Route::post('/logout', [LogoutController::class, 'logout'])->middleware('auth')->name('logout.btn');
 
 Route::get('/home', [LibrariesController::class, 'index']);
+Route::get('/home/favorite', [FavoriteController::class, 'view']);
+Route::get('/home/recently', [RecentlyController::class, 'viewRecently']);
 
 Route::get('/library/find', [LibrariesController::class, 'findLibrary']);
 Route::get('/home/library/search', [LibrariesController::class, 'search'])->name('search.library');

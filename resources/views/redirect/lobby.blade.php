@@ -21,7 +21,7 @@
                 placeholder="Search Library" id="search-library"></input>
         </div>
         <div class="flex items-center p-2">
-            <button onclick="popModal()" class="flex items-center p-2 rounded-[8px] text-xl w-full bg-pink-900 focus:outline-none">
+            <button onclick="popModal()" class="flex items-center p-2 rounded-[8px] text-xl w-full bg-pink-900">
                 <img src="{{ asset('assets/img/icon_plus_only.svg') }}" class="mr-2">New Library
             </button>
         </div>
