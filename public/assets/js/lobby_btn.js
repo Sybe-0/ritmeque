@@ -6,11 +6,12 @@ const libraryDel = document.querySelector("#library-del");
 const playlistDel = document.querySelector("#playlist-del");
 
 function librariesDelete() {
-    if (libraryDel.style.display === "none") {
-        libraryDel.style.display = "flex";
-    } else {
-        libraryDel.style.display = "none";
-    }
+    // if (libraryDel.style.display === "none") {
+    //     libraryDel.style.display = "flex";
+    // } else {
+    //     libraryDel.style.display = "none";
+    // }
+    libraryDel.style.display = !libraryDel.style.display ? "flex" : libraryDel.style.display === "none" ? "flex" : "none";
 }
 
 function modalDelPlay(id) {
@@ -26,27 +27,15 @@ function modalDelPlay(id) {
 }
 
 function urlInput() {
-    if (modalUrl.style.display === "none") {
-        modalUrl.style.display = "flex";
-    } else {
-        modalUrl.style.display = "none";
-    }
+    modalUrl.style.display = !modalUrl.style.display ? "flex" : modalUrl.style.display === "none" ? "flex" : "none";
 }
 
 function modalAddLibrary() {
-    if (modalLibrary.style.display === "none") {
-        modalLibrary.style.display = "flex";
-    } else {
-        modalLibrary.style.display = "none";
-    }
+    modalLibrary.style.display = !modalLibrary.style.display ? "flex" : modalLibrary.style.display === "none" ? "flex" : "none";
 }
 
 function editModal() {
-    if (modalEdit.style.display === "none") {
-        modalEdit.style.display = "flex";
-    } else {
-        modalEdit.style.display = "none";
-    }
+    modalEdit.style.display = !modalEdit.style.display ? "flex" : modalEdit.style.display === "none" ? "flex" : "none";
 }
 
 function closeModal() {

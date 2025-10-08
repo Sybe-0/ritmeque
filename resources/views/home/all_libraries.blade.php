@@ -141,15 +141,15 @@
             <div class="bg-white w-full h-0.5 mb-1"></div>
             <input type="search" name="query" id="search-library"
                 class="bg-pink-700 w-full mt-4 p-2 rounded-[4px] focus:outline-none" placeholder="Search library">
-            <button class="bg-pink-900 mt-2 mb-2 p-2 w-full flex items-center cursor-pointer rounded-[4px]"
+            <button class="bg-pink-900 mt-2 mb-2 p-2 w-full flex items-center cursor-pointer rounded-[4px] hover:border-pink-600 hover:bg-pink-800"
                 onclick="modalAddLibrary()">
                 <img src="{{ asset('assets/img/icon_plus_only.svg') }}" class="mr-2">
                 <p class="text-xl">New Library</p>
             </button>
-            <p class="p-2 cursor-pointer border-pink-400 border-b-[1px]"><a href="/home">All Libraries</a></p>
-            <p class="p-2 cursor-pointer"><a href="/home/favorite">Favorite</a></p>
-            <p class="p-2 cursor-pointer"><a href="/home/recently">Recently Viewed</a></p>
-            <p class="p-2 cursor-pointer"><a href="">About</a></p>
+            <p class="p-2 cursor-pointer border-pink-600 border-b-[1px] hover:border-[1px] hover:border-pink-600 hover:text-gray-400 hover:bg-pink-800 rounded-[4px]"><a href="/home">All Libraries</a></p>
+            <p class="p-2 cursor-pointer hover:border-[1px] hover:border-pink-600 hover:text-gray-300 hover:bg-pink-800 rounded-[4px]"><a href="/home/favorite">Favorite</a></p>
+            <p class="p-2 cursor-pointer hover:border-[1px] hover:border-pink-600 hover:text-gray-300 hover:bg-pink-800 rounded-[4px]"><a href="/home/recently">Recently Viewed</a></p>
+            <p class="p-2 cursor-pointer hover:border-[1px] hover:border-pink-600 hover:text-gray-300 hover:bg-pink-800 rounded-[4px]"><a href="">About</a></p>
         </nav>
         {{-- main dashboard --}}
         <main id="main-dashboard" class="h-full flex-1 mt-4 ml-4 mr-4 overflow-hidden">
