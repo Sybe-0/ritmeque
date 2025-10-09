@@ -43,3 +43,7 @@ body {
 .btn-social-media {
     @apply h-11 border-[theme(--color-med-pink)] border-1 text-2xl flex justify-center rounded-[10px];
 }
+
+.drag-over {
+    @apply border-dashed border-[1px] border-pink-600;
+}

@@ -48,16 +48,14 @@ function libraries(idlibrary) {
         .then((list) => {
             playlistTable.innerHTML = "";
             list.forEach((play) => {
-                let list = `<div class="flex justify-between items-center w-full border-b-[1px] mt-2">
+                let list = `<li class="flex justify-between items-center w-full border-b-[1px] mt-2">
+                                <span class="drag-handle ml-2 mr-4 select-none cursor-grab active:cursor-grabbing" draggable="true">≡</span>
+                                <span class="text-xl">${play.songs}</span>
                                 <div class="flex">
-                                    <p></p>
-                                    <div class="text-xl">${play.songs}</div>
+                                    <button class="px-2 select-none" onclick="modalUpdatePlay(${play.id})">Edit</button>
+                                    <button class="ml-2 mr-2 px-2 select-none bg-custom-pink rounded-[4px]" onclick="modalDelPlay(${play.id})">Hapus</button>
                                     </div>
-                                <div class="flex">
-                                    <button class="mr-2 px-2" onclick="modalUpdatePlay(${play.id})">Edit</button>
-                                    <button class="ml-2 px-2 bg-custom-pink rounded-[4px]" onclick="modalDelPlay(${play.id})">Hapus</button>
-                                    </div>
-                            </div>`;
+                            </li>`;
                 playlistTable.insertAdjacentHTML("beforeend", list);
             });
         });
@@ -72,7 +70,7 @@ inputFav.addEventListener("change", async function () {
     })
         .then((response) => response.json())
         .then((data) => {
-            libraries(data. id);
+            libraries(data.id);
         });
 });
 document
