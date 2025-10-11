@@ -239,6 +239,7 @@
 
     <script src="{{ asset('assets/js/lobby_btn.js') }}"></script>
     <script src="{{ asset('assets/js/lobby_fetch.js') }}"></script>
+    <script src="{{ asset('assets/js/lobby_drag_drop.js') }}"></script>
 </body>
 
 </html>

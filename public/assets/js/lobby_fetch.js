@@ -146,27 +146,6 @@ document
     });
 
 document
-    .querySelector("#form-delete-playlist")
-    .addEventListener("submit", function (e) {
-        e.preventDefault();
-        const del = e.target;
-        const delData = new FormData(del);
-
-        fetch("/playlist/delete", {
-            method: "POST",
-            headers: {
-                "X-CSRF-TOKEN": delData.get("_token"),
-                Accept: "application/json",
-            },
-            body: delData,
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                libraries(data.id);
-            });
-    });
-
-document
     .querySelector("#form-add-playlist")
     .addEventListener("submit", function (e) {
         e.preventDefault();
@@ -208,3 +187,24 @@ function modalUpdatePlay(id) {
         modalUpdateUrl.style.display = "none";
     }
 }
+
+document
+    .querySelector("#form-delete-playlist")
+    .addEventListener("submit", function (e) {
+        e.preventDefault();
+        const del = e.target;
+        const delData = new FormData(del);
+
+        fetch("/playlist/delete", {
+            method: "POST",
+            headers: {
+                "X-CSRF-TOKEN": delData.get("_token"),
+                Accept: "application/json",
+            },
+            body: delData,
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                libraries(data.id);
+            });
+    });
