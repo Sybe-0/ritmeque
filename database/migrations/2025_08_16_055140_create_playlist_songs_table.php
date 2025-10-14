@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('songs');
             $table->foreignId('libraries_id');
+            $table->integer('order')->default(0);
             $table->string('url_link');
             $table->timestamps();
 

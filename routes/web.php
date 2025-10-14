@@ -31,6 +31,7 @@ Route::get('library/favbtn', [LibrariesController::class, 'favBtn'])->name('favo
 Route::post('/home/playlist', [PlaylistController::class, 'createPlaylist'])->name('add.playlist');
 Route::post('/home/edit/playlist', [PlaylistController::class, 'updatePlaylist'])->name('upd.playlist');
 Route::post('/playlist/delete', [PlaylistController::class, 'destroyPlaylist'])->name('del.playlist');
+Route::post('/playlist/order', [PlaylistController::class, 'updateOrder']);
 Route::get('/library/playlist/find', [PlaylistController::class, 'findPlaylist']);
 Route::get('/playlist/find', [PlaylistController::class, 'findPlaylistFetch']);
 

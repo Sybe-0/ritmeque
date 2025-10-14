@@ -76,4 +76,33 @@ class PlaylistController extends Controller
         $idPlaylist->delete();
         return response()->json($idPlaylist);
     }
+
+    public function updateOrder(Request $request)
+    {
+        $request->validate([
+            'order' => 'required|array|min:1',
+            'order.*' => 'required|integer'
+        ]);
+
+        $orderId = $request->input('order');
+        $orderValue = 1;
+
+        try {
+            DB::transaction(function () use ($orderId, $orderValue) {
+                foreach ($orderId as $itemId) {
+                    Playlist::where('id', $itemId)->update(['order' => $orderValue]);
+                    $orderValue++;
+                }
+            });
+            return response()->json([
+                'success' => true,
+                'order' => $orderId
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to load: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 }

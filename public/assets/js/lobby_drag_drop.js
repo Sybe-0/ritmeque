@@ -60,5 +60,28 @@ ul.addEventListener("drop", (e) => {
         ul.appendChild(draggedItem);
     }
 
+    const newOrder = Array.from(ul.querySelectorAll("li")).map((li) => {
+        return parseInt(li.dataset.id);
+    });
+    fetch("/playlist/order", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN": document
+                .querySelector('meta[name="csrf-token"]')
+                .getContent(),
+        },
+        body: JSON.stringify({ order: newOrder }),
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.success) {
+                console.log("Urutan disimpan:", data.order);
+            } else {
+                console.error("Error:", data.message);
+            }
+        })
+        .catch((error) => console.error("Gagal kirim:", error));
+
     ul.querySelectorAll("li").forEach((li) => li.classList.remove("drag-over"));
 });

@@ -15,6 +15,12 @@ class Playlist extends Model
     protected $fillable = [
         'songs',
         'libraries_id',
+        'order',
         'url_link',
     ];
+
+    public function scopeOrdered($query)
+    {
+        return $query->orderBy('order');
+    }
 }

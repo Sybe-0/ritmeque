@@ -227,11 +227,6 @@
                 </div>
             </div>
 
-            {{-- <img src="{{ asset('assets/img/icon_plus_add.svg') }}" class="w-12" onclick="urlInput()">
-            <img src="{{ asset('assets/img/icon_trash.svg') }}" class="ml-2 w-10" onclick="librariesDelete()">
-            <img src="{{ asset('assets/img/icon_edit.svg') }}" class="ml-2 w-10" onclick="editModal()">
-            <img src="{{ asset('assets/img/icon_play.svg') }}" class="ml-2 w-10"> --}}
-
             <div id="result-library"></div>
         </main>
     </div>
