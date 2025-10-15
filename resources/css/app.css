@@ -47,3 +47,7 @@ body {
 .drag-over {
     @apply border-dashed border-[1px] border-pink-600;
 }
+
+.show {
+    @apply translate-x-0;
+}

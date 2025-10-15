@@ -5,21 +5,20 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ResetController;
 use App\Http\Controllers\LogoutController;
-use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\PlaylistController;
-use App\Http\Controllers\RecentlyController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\LibrariesController;
+use App\Http\Controllers\ViewController;
 
-Route::get('/signup', [RegisterController::class, 'signup'])->middleware('guest');
+Route::get('/home', [ViewController::class, 'allLibraries']);
+Route::get('/signup', [ViewController::class, 'signup'])->middleware('guest');
+Route::get('/signin', [ViewController::class, 'signin'])->middleware('guest');
+Route::get('/home/favorite', [ViewController::class, 'viewFavorite']);
+Route::get('/home/recently', [ViewController::class, 'viewRecently']);
+
 Route::post('/signup', [RegisterController::class, 'create']);
-Route::get('/signin', [LoginController::class, 'signin'])->middleware('guest');
 Route::post('/signin', [LoginController::class, 'authenticate']);
 Route::post('/logout', [LogoutController::class, 'logout'])->middleware('auth')->name('logout.btn');
-
-Route::get('/home', [LibrariesController::class, 'index']);
-Route::get('/home/favorite', [FavoriteController::class, 'view']);
-Route::get('/home/recently', [RecentlyController::class, 'viewRecently']);
 
 Route::get('/library/find', [LibrariesController::class, 'findLibrary']);
 Route::get('/home/library/search', [LibrariesController::class, 'search'])->name('search.library');

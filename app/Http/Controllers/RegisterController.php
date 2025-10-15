@@ -9,10 +9,6 @@ use Illuminate\Support\Facades\DB;
 
 class RegisterController extends Controller
 {
-    public function signup()
-    {
-        return view('auth.register');
-    }
     public function create(Request $request)
     {
 

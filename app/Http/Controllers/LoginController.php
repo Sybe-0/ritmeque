@@ -10,11 +10,6 @@ use Illuminate\Support\Str;
 
 class LoginController extends Controller
 {
-    public function signin()
-    {
-        return view('auth.login');
-    }
-
     public function authenticate(Request $request)
     {
         $credentials = $request->validate([

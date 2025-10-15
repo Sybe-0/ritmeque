@@ -5,13 +5,26 @@ const modalUpdate = document.querySelector("#modal-url-update");
 const libraryDel = document.querySelector("#library-del");
 const playlistDel = document.querySelector("#playlist-del");
 
+document.addEventListener("DOMContentLoaded", function () {
+    const toggleBtn = document.getElementById("sidebar-btn");
+    const navbar = document.getElementById("sidebar");
+
+    toggleBtn.addEventListener("click", function () {
+        navbar.classList.toggle("translate-x-0");
+    });
+});
+
 function librariesDelete() {
     // if (libraryDel.style.display === "none") {
     //     libraryDel.style.display = "flex";
     // } else {
     //     libraryDel.style.display = "none";
     // }
-    libraryDel.style.display = !libraryDel.style.display ? "flex" : libraryDel.style.display === "none" ? "flex" : "none";
+    libraryDel.style.display = !libraryDel.style.display
+        ? "flex"
+        : libraryDel.style.display === "none"
+        ? "flex"
+        : "none";
 }
 
 function modalDelPlay(id) {
@@ -27,15 +40,27 @@ function modalDelPlay(id) {
 }
 
 function urlInput() {
-    modalUrl.style.display = !modalUrl.style.display ? "flex" : modalUrl.style.display === "none" ? "flex" : "none";
+    modalUrl.style.display = !modalUrl.style.display
+        ? "flex"
+        : modalUrl.style.display === "none"
+        ? "flex"
+        : "none";
 }
 
 function modalAddLibrary() {
-    modalLibrary.style.display = !modalLibrary.style.display ? "flex" : modalLibrary.style.display === "none" ? "flex" : "none";
+    modalLibrary.style.display = !modalLibrary.style.display
+        ? "flex"
+        : modalLibrary.style.display === "none"
+        ? "flex"
+        : "none";
 }
 
 function editModal() {
-    modalEdit.style.display = !modalEdit.style.display ? "flex" : modalEdit.style.display === "none" ? "flex" : "none";
+    modalEdit.style.display = !modalEdit.style.display
+        ? "flex"
+        : modalEdit.style.display === "none"
+        ? "flex"
+        : "none";
 }
 
 function closeModal() {

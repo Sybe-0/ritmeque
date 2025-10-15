@@ -11,14 +11,14 @@ use Carbon\Carbon;
 
 class LibrariesController extends Controller
 {
-    public function index()
-    {
-        // $datalibrary = DB::select('SELECT * FROM libraries WHERE users_id = ?', [$userId]);
-        $userId = Auth::id();
-        $datalibrary = Library::where('users_id', $userId)->get();
-        return view('home.all_libraries', compact('datalibrary'));
-        // dd($datalibrary, collect($data)->toArray());
-    }
+    // public function index()
+    // {
+    //     // $datalibrary = DB::select('SELECT * FROM libraries WHERE users_id = ?', [$userId]);
+    //     $userId = Auth::id();
+    //     $datalibrary = Library::where('users_id', $userId)->get();
+    //     return view('home.all_libraries', compact('datalibrary'));
+    //     // dd($datalibrary, collect($data)->toArray());
+    // }
 
     public function findLibrary(Request $request)
     {
